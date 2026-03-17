@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
 import { 
   HelpCircle, Phone, Mail, 
   MapPin, ChevronDown, MessageSquare, 
