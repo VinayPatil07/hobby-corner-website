@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
-  MapPin, CalendarDays, Clock, 
+  CalendarDays, Clock, 
   Dices, Rocket, Sword, Users, 
-  Coffee, Phone, Info, ChevronRight, 
+  Coffee, Info, ChevronRight, 
   ChevronLeft, Sparkles 
 } from 'lucide-react';
 

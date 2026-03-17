@@ -1,7 +1,6 @@
-import React from 'react';
 import { 
   CalendarDays, ArrowRight, Tag, 
-  Archive, Mail, Send, MessageSquare 
+  Archive, Mail, Send 
 } from 'lucide-react';
 
 // --- ACTUAL STORE DATA ---
