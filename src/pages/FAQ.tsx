@@ -66,35 +66,38 @@ export const FAQPage = () => {
     setOpenIndex(openIndex === id ? null : id);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // The data we are sending to the EmailJS template
-    const templateParams = {
-      user_email: emailText || "No email provided",
-      message: questionText,
-    };
 
-    // Send it!
-    emailjs.send(
-      'YOUR_SERVICE_ID',     // Replace with your Service ID
-      'YOUR_TEMPLATE_ID',    // Replace with your Template ID
-      templateParams,
-      'YOUR_PUBLIC_KEY'      // Replace with your Public Key
-    )
-    .then((response) => {
-      console.log('SUCCESS!', response.status, response.text);
+    try {
+      // Send the data to our secure Vercel API function
+      const response = await fetch('/api/submit-faq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: emailText,
+          question: questionText,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      // Show success state
       setIsSubmitted(true);
       setQuestionText("");
       setEmailText("");
       
       // Reset the success message after 5 seconds
       setTimeout(() => setIsSubmitted(false), 5000);
-    })
-    .catch((err) => {
-      console.log('FAILED...', err);
+
+    } catch (error) {
+      console.error('Failed to submit question:', error);
       alert("Oops! Something went wrong sending your message. Please try calling the store.");
-    });
+    }
   };
 
   return (
