@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { 
   HelpCircle, Phone, Mail, 
   MapPin, ChevronDown, MessageSquare, 
@@ -67,13 +68,33 @@ export const FAQPage = () => {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you'd send this data to your backend or email service here
-    setIsSubmitted(true);
-    setQuestionText("");
-    setEmailText("");
     
-    // Optional: Reset the success message after a few seconds
-    setTimeout(() => setIsSubmitted(false), 5000);
+    // The data we are sending to the EmailJS template
+    const templateParams = {
+      user_email: emailText || "No email provided",
+      message: questionText,
+    };
+
+    // Send it!
+    emailjs.send(
+      'YOUR_SERVICE_ID',     // Replace with your Service ID
+      'YOUR_TEMPLATE_ID',    // Replace with your Template ID
+      templateParams,
+      'YOUR_PUBLIC_KEY'      // Replace with your Public Key
+    )
+    .then((response) => {
+      console.log('SUCCESS!', response.status, response.text);
+      setIsSubmitted(true);
+      setQuestionText("");
+      setEmailText("");
+      
+      // Reset the success message after 5 seconds
+      setTimeout(() => setIsSubmitted(false), 5000);
+    })
+    .catch((err) => {
+      console.log('FAILED...', err);
+      alert("Oops! Something went wrong sending your message. Please try calling the store.");
+    });
   };
 
   return (
