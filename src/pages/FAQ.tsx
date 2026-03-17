@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from '../supabaseClient';
 import { 
   HelpCircle, Phone, Mail, 
   MapPin, ChevronDown, MessageSquare, 
@@ -69,7 +70,20 @@ export const FAQPage = () => {
     e.preventDefault();
 
     try {
-      // Send the data to our secure Vercel API function
+      // 1. Save the question to our new Supabase Database
+      const { error: dbError } = await supabase
+        .from('faqs')
+        .insert([
+          { 
+            customer_email: emailText || null, 
+            question: questionText,
+            status: 'pending' // Defaults to pending so staff can review it
+          }
+        ]);
+
+      if (dbError) throw dbError;
+
+      // 2. Ping the Discord Channel via our Vercel Serverless Function
       const response = await fetch('/api/submit-faq', {
         method: 'POST',
         headers: {
@@ -82,10 +96,10 @@ export const FAQPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to send Discord notification');
       }
 
-      // Show success state
+      // 3. Show Success State
       setIsSubmitted(true);
       setQuestionText("");
       setEmailText("");
@@ -95,7 +109,7 @@ export const FAQPage = () => {
 
     } catch (error) {
       console.error('Failed to submit question:', error);
-      alert("Oops! Something went wrong sending your message. Please try calling the store.");
+      alert("Oops! Something went wrong saving your message. Please try calling the store.");
     }
   };
 
