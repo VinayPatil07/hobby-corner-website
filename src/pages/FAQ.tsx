@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { 
   HelpCircle, Phone, Mail, 
@@ -6,7 +6,7 @@ import {
   Send
 } from 'lucide-react';
 
-// --- FAQ DATA ---
+// --- INITIAL FAQ DATA ---
 const faqs = [
   {
     category: "Store Policies",
@@ -56,11 +56,44 @@ const faqs = [
 export const FAQPage = () => {
   // State to track which accordion is currently open
   const [openIndex, setOpenIndex] = useState<string | null>("Store Policies-0");
+  const [liveFaqs, setLiveFaqs] = useState<any[]>([]);
   
   // Form State
   const [questionText, setQuestionText] = useState("");
   const [emailText, setEmailText] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Fetch answered FAQs from Supabase when the page loads
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      const { data, error } = await supabase
+        .from('faqs')
+        .select('*')
+        .eq('status', 'answered') // Only get answered questions
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error("Error fetching FAQs:", error);
+      } else if (data) {
+        setLiveFaqs(data);
+      }
+    };
+
+    fetchFAQs();
+  }, []);
+
+  // Merge hardcoded FAQs with live FAQs from the database
+  const displayFaqs = faqs.map(section => {
+    // Find any live FAQs that match the current category loop
+    const dynamicQuestions = liveFaqs
+      .filter(faq => faq.category === section.category)
+      .map(faq => ({ q: faq.question, a: faq.answer })); // Map them to match the { q, a } structure
+
+    return {
+      ...section,
+      questions: [...section.questions, ...dynamicQuestions]
+    };
+  });
 
   const toggleFAQ = (id: string) => {
     setOpenIndex(openIndex === id ? null : id);
@@ -159,7 +192,7 @@ export const FAQPage = () => {
               
               {/* Accordions */}
               <div>
-                {faqs.map((section, sIdx) => (
+                {displayFaqs.map((section, sIdx) => (
                   <div key={sIdx} className="mb-12 last:mb-0">
                     <div className="flex items-center gap-3 mb-6 border-b-4 border-double border-navy-base pb-2">
                       <HelpCircle className="text-tangerine-accent" size={24} strokeWidth={2.5} />
