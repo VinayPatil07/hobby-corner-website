@@ -6,7 +6,8 @@ export const config = {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).send('Method not allowed');
+    res.writeHead(405);
+    return res.end('Method not allowed');
   }
 
   const PUBLIC_KEY = process.env.DISCORD_PUBLIC_KEY;
@@ -23,21 +24,23 @@ export default async function handler(req, res) {
   try {
     const isValidRequest = verifyKey(rawBody, signature, timestamp, PUBLIC_KEY);
     if (!isValidRequest) {
-      console.error("❌ SIGNATURE VERIFICATION FAILED");
-      return res.status(401).send('Bad request signature');
+      res.writeHead(401);
+      return res.end('Bad request signature');
     }
   } catch (err) {
-    console.error("❌ VERIFY_KEY ERROR:", err);
-    return res.status(401).send('Verification failed');
+    res.writeHead(401);
+    return res.end('Verification failed');
   }
 
   const interaction = JSON.parse(rawBody);
 
   // 1. THE PING
   if (interaction.type === 1) {
-    console.log("✅ PING RECEIVED AND VERIFIED! SENDING JSON.");
-    // This is the magic fix! Vercel's .json() formats the headers perfectly for Discord.
-    return res.status(200).json({ type: 1 });
+    console.log("✅ RAW NODE.JS PING RESPONSE TRIGGERED");
+    
+    // Bypassing Vercel completely: Pure Node.js headers and response
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ type: 1 }));
   }
 
   // 2. BUTTON CLICKS
@@ -45,7 +48,8 @@ export default async function handler(req, res) {
     const buttonId = interaction.data.custom_id;
 
     if (buttonId === 'answer_faq') {
-      return res.status(200).json({
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
         type: 9, 
         data: {
           title: "Answer FAQ Question",
@@ -65,20 +69,22 @@ export default async function handler(req, res) {
             }
           ]
         }
-      });
+      }));
     }
 
     if (buttonId === 'ignore_faq') {
-      return res.status(200).json({
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
         type: 7, 
         data: {
           content: "❌ *Question ignored and archived.*",
           embeds: interaction.message.embeds,
           components: [] 
         }
-      });
+      }));
     }
   }
 
-  return res.status(400).send('Unknown interaction type');
+  res.writeHead(400);
+  return res.end('Unknown interaction type');
 }
