@@ -11,7 +11,7 @@ interface FAQ {
   status: string;
 }
 
-const CATEGORIES = ["Store Info", "Products", "Shipping & Returns", "Events", "Other"];
+const CATEGORIES = ["Store Policies", "Services & Orders", "Events & Gaming"];
 
 export default function AdminFAQs() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);

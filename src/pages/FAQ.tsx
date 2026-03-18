@@ -83,11 +83,15 @@ export const FAQPage = () => {
   }, []);
 
   // Merge hardcoded FAQs with live FAQs from the database
+  // Merge hardcoded FAQs with live FAQs from the database
   const displayFaqs = faqs.map(section => {
     // Find any live FAQs that match the current category loop
     const dynamicQuestions = liveFaqs
-      .filter(faq => faq.category === section.category)
-      .map(faq => ({ q: faq.question, a: faq.answer })); // Map them to match the { q, a } structure
+      .filter(faq => 
+        // We use .trim() and .toLowerCase() to prevent small typos from breaking the site
+        faq.category?.trim().toLowerCase() === section.category.trim().toLowerCase()
+      )
+      .map(faq => ({ q: faq.question, a: faq.answer }));
 
     return {
       ...section,
