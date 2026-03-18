@@ -1,55 +1,52 @@
 import { verifyKey } from 'discord-interactions';
 
+// Tell Vercel to bypass Node.js and run this on the ultra-fast Edge Network
 export const config = {
-  api: { bodyParser: false },
+  runtime: 'edge',
 };
 
-export default async function handler(req, res) {
+export default async function handler(req) {
+  // Edge functions use standard Web API Responses
   if (req.method !== 'POST') {
-    res.writeHead(405);
-    return res.end('Method not allowed');
+    return new Response('Method not allowed', { status: 405 });
   }
 
+  const signature = req.headers.get('x-signature-ed25519');
+  const timestamp = req.headers.get('x-signature-timestamp');
   const PUBLIC_KEY = process.env.DISCORD_PUBLIC_KEY;
-  const signature = req.headers['x-signature-ed25519'];
-  const timestamp = req.headers['x-signature-timestamp'];
 
-  // Read the raw stream exactly as Discord sent it
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-  }
-  const rawBody = Buffer.concat(chunks).toString('utf8');
+  // Edge gets the raw body cleanly in one line!
+  const rawBody = await req.text();
 
   try {
     const isValidRequest = verifyKey(rawBody, signature, timestamp, PUBLIC_KEY);
     if (!isValidRequest) {
-      res.writeHead(401);
-      return res.end('Bad request signature');
+      console.error("❌ SIGNATURE VERIFICATION FAILED");
+      return new Response('Bad request signature', { status: 401 });
     }
   } catch (err) {
-    res.writeHead(401);
-    return res.end('Verification failed');
+    return new Response('Verification failed', { status: 401 });
   }
 
   const interaction = JSON.parse(rawBody);
 
   // 1. THE PING
   if (interaction.type === 1) {
-    console.log("✅ RAW NODE.JS PING RESPONSE TRIGGERED");
+    console.log("✅ EDGE PING VERIFIED! SENDING JSON.");
     
-    // Bypassing Vercel completely: Pure Node.js headers and response
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ type: 1 }));
+    // Pure, untampered JSON response
+    return new Response(JSON.stringify({ type: 1 }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   // 2. BUTTON CLICKS
   if (interaction.type === 3) {
-    const buttonId = interaction.data.custom_id;
+    const buttonId = interaction.data?.custom_id;
 
     if (buttonId === 'answer_faq') {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({
+      return new Response(JSON.stringify({
         type: 9, 
         data: {
           title: "Answer FAQ Question",
@@ -69,22 +66,26 @@ export default async function handler(req, res) {
             }
           ]
         }
-      }));
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     if (buttonId === 'ignore_faq') {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({
+      return new Response(JSON.stringify({
         type: 7, 
         data: {
           content: "❌ *Question ignored and archived.*",
           embeds: interaction.message.embeds,
           components: [] 
         }
-      }));
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
   }
 
-  res.writeHead(400);
-  return res.end('Unknown interaction type');
+  return new Response('Unknown interaction type', { status: 400 });
 }
