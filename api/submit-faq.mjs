@@ -9,28 +9,36 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Question is required' });
   }
 
-  // 1. SAVE TO SUPABASE FIRST
+  // 1. SAVE TO SUPABASE (Strict Version)
   const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
-  if (supabaseUrl && supabaseKey) {
-    try {
-      await fetch(`${supabaseUrl}/rest/v1/faqs`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ email, question })
-      });
-      console.log("✅ Saved to Supabase");
-    } catch (dbError) {
-      console.error("❌ Supabase Error:", dbError);
+  try {
+    const dbRes = await fetch(`${supabaseUrl}/rest/v1/faqs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Profile': 'public',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ 
+        email: email,      // Make sure this matches your 'email' column
+        question: question, 
+        status: 'pending' 
+      })
+    });
+
+    if (!dbRes.ok) {
+      const dbErrorLog = await dbRes.text();
+      console.error("❌ Supabase Rejected Save:", dbErrorLog);
+      throw new Error(`Supabase Error: ${dbRes.status}`);
     }
-  } else {
-    console.error("❌ Missing Supabase Environment Variables in Vercel");
+    console.log("✅ Actually Saved to Supabase");
+  } catch (dbError) {
+    console.error("❌ Database Connection Failed:", dbError);
+    return res.status(500).json({ error: "Database Save Failed" });
   }
 
   // 2. SEND THE DISCORD ALERT

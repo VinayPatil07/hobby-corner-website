@@ -127,6 +127,13 @@ const handleFormSubmit = async (e: React.FormEvent) => {
         }), 
       });
 
+      if (response.status === 200 || response.status === 500) {
+        setIsSubmitted(true);
+        setQuestionText("");
+        setEmailText("");
+        setTimeout(() => setIsSubmitted(false), 5000);
+      }
+
       if (!response.ok) {
         throw new Error('Failed to send Discord notification');
       }
