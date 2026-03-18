@@ -99,33 +99,32 @@ export const FAQPage = () => {
     setOpenIndex(openIndex === id ? null : id);
   };
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
+const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      // 1. Save the question to our new Supabase Database
+      // 1. Save the question to Supabase
       const { error: dbError } = await supabase
         .from('faqs')
         .insert([
           { 
-            customer_email: emailText || null, 
+            email: emailText || null, // Changed from customer_email to email
             question: questionText,
-            status: 'pending' // Defaults to pending so staff can review it
+            status: 'pending' 
           }
         ]);
 
       if (dbError) throw dbError;
 
-      // 2. Ping the Discord Channel via our Vercel Serverless Function
+      // 2. Ping Discord via Vercel Function
+      // We use the local state variables (emailText/questionText) here
       const response = await fetch('/api/submit-faq', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: emailText,
-          question: questionText,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: emailText, 
+          question: questionText 
+        }), 
       });
 
       if (!response.ok) {
@@ -137,7 +136,6 @@ export const FAQPage = () => {
       setQuestionText("");
       setEmailText("");
       
-      // Reset the success message after 5 seconds
       setTimeout(() => setIsSubmitted(false), 5000);
 
     } catch (error) {

@@ -48,11 +48,11 @@ export default async function handler(req, res) {
     embeds: [
       {
         title: "🚨 New FAQ Question Submitted",
-        description: `**[➡️ Click here to open the Admin Dashboard and answer this question](${adminUrl})**`,
+        description: `**[➡️ Open Admin Dashboard](${adminUrl})**`,
         color: 16738816, 
         fields: [
           { name: "Customer Email", value: email || "No email provided", inline: false },
-          { name: "Question", value: question, inline: false }
+          { name: "Question", value: question || "Empty Question", inline: false }
         ],
         timestamp: new Date().toISOString()
       }
