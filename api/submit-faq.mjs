@@ -16,39 +16,23 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Discord Bot Token or Channel ID missing' });
   }
 
-  // The official Discord API endpoint for sending a message
+  // The secret URL to your new Admin Dashboard
+  const adminUrl = `https://hobby-corner-website.vercel.app/admin/faqs`;
+
   const discordApiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
-  // Format the message with our new Interactive Buttons
+  // Format the message with a clickable Magic Link instead of buttons!
   const payload = {
     embeds: [
       {
         title: "🚨 New FAQ Question Submitted",
+        description: `**[➡️ Click here to open the Admin Dashboard and answer this question](${adminUrl})**`,
         color: 16738816, // Tangerine Accent
         fields: [
           { name: "Customer Email", value: email || "No email provided", inline: false },
           { name: "Question", value: question, inline: false }
         ],
         timestamp: new Date().toISOString()
-      }
-    ],
-    components: [
-      {
-        type: 1, // Action Row (a container for buttons)
-        components: [
-          {
-            type: 2, // Button
-            style: 3, // Green button
-            label: "Answer Question",
-            custom_id: `answer_faq`, // We will use this ID to listen for the click later!
-          },
-          {
-            type: 2, // Button
-            style: 4, // Red button
-            label: "Ignore",
-            custom_id: `ignore_faq`,
-          }
-        ]
       }
     ]
   };
@@ -58,14 +42,12 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': `Bot ${botToken}` // Bots must authorize like this!
+        'Authorization': `Bot ${botToken}` 
       },
       body: JSON.stringify(payload)
     });
 
     if (!discordRes.ok) {
-      const errorData = await discordRes.text();
-      console.error("Discord API Error:", errorData);
       throw new Error('Failed to send message via Discord Bot');
     }
 
