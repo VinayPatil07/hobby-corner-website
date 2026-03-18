@@ -31,26 +31,21 @@ export default async function handler(req, res) {
     return res.status(401).send('Verification failed');
   }
 
-  // If we made it here, Discord's math checks out!
   const interaction = JSON.parse(rawBody);
 
   // 1. THE PING
   if (interaction.type === 1) {
-    console.log("✅ PING RECEIVED AND VERIFIED! SENDING { type: 1 }");
-    
-    // Force the correct headers so Discord doesn't reject it
-    res.setHeader('Content-Type', 'application/json');
-    return res.status(200).send(JSON.stringify({ type: 1 }));
+    console.log("✅ PING RECEIVED AND VERIFIED! SENDING JSON.");
+    // This is the magic fix! Vercel's .json() formats the headers perfectly for Discord.
+    return res.status(200).json({ type: 1 });
   }
 
   // 2. BUTTON CLICKS
   if (interaction.type === 3) {
-    console.log("🖱️ BUTTON CLICKED:", interaction.data.custom_id);
     const buttonId = interaction.data.custom_id;
 
     if (buttonId === 'answer_faq') {
-      res.setHeader('Content-Type', 'application/json');
-      return res.status(200).send(JSON.stringify({
+      return res.status(200).json({
         type: 9, 
         data: {
           title: "Answer FAQ Question",
@@ -70,19 +65,18 @@ export default async function handler(req, res) {
             }
           ]
         }
-      }));
+      });
     }
 
     if (buttonId === 'ignore_faq') {
-      res.setHeader('Content-Type', 'application/json');
-      return res.status(200).send(JSON.stringify({
+      return res.status(200).json({
         type: 7, 
         data: {
           content: "❌ *Question ignored and archived.*",
           embeds: interaction.message.embeds,
           components: [] 
         }
-      }));
+      });
     }
   }
 
