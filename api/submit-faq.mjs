@@ -48,6 +48,8 @@ export default async function handler(req, res) {
     });
 
     if (!discordRes.ok) {
+      const errorData = await discordRes.text();
+      console.error("Discord API Error Reason:", errorData);
       throw new Error('Failed to send message via Discord Bot');
     }
 
