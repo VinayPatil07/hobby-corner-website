@@ -9,25 +9,47 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Question is required' });
   }
 
+  // 1. SAVE TO SUPABASE FIRST
+  const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+
+  if (supabaseUrl && supabaseKey) {
+    try {
+      await fetch(`${supabaseUrl}/rest/v1/faqs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email, question })
+      });
+      console.log("✅ Saved to Supabase");
+    } catch (dbError) {
+      console.error("❌ Supabase Error:", dbError);
+    }
+  } else {
+    console.error("❌ Missing Supabase Environment Variables in Vercel");
+  }
+
+  // 2. SEND THE DISCORD ALERT
   const botToken = process.env.DISCORD_BOT_TOKEN;
   const channelId = process.env.DISCORD_CHANNEL_ID;
 
   if (!botToken || !channelId) {
-    return res.status(500).json({ error: 'Discord Bot Token or Channel ID missing' });
+    return res.status(500).json({ error: 'Discord keys missing' });
   }
 
-  // The secret URL to your new Admin Dashboard
   const adminUrl = `https://hobby-corner-website.vercel.app/admin/faqs`;
-
   const discordApiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
-  // Format the message with a clickable Magic Link instead of buttons!
   const payload = {
     embeds: [
       {
         title: "🚨 New FAQ Question Submitted",
         description: `**[➡️ Click here to open the Admin Dashboard and answer this question](${adminUrl})**`,
-        color: 16738816, // Tangerine Accent
+        color: 16738816, 
         fields: [
           { name: "Customer Email", value: email || "No email provided", inline: false },
           { name: "Question", value: question, inline: false }

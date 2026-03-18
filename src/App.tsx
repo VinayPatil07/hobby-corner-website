@@ -10,6 +10,8 @@ import ServicesPage from './pages/Services';
 import { EventsPage } from './pages/Events';
 import BlogPage from './pages/Blog';
 import FAQPage from './pages/FAQ';
+import AdminFAQs from './AdminFAQs'; // Adjust the path based on where you saved it
+
 
 const HomePage = () => (
   <>
@@ -33,6 +35,7 @@ function App() {
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/faq" element={<FAQPage />} />
+            <Route path="/admin/faqs" element={<AdminFAQs />} />
           </Routes>
         </main>
         <Footer />
