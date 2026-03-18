@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -10,51 +9,69 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Question is required' });
   }
 
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+  const botToken = process.env.DISCORD_BOT_TOKEN;
+  const channelId = process.env.DISCORD_CHANNEL_ID;
 
-  if (!webhookUrl) {
-    return res.status(500).json({ error: 'Discord Webhook URL not configured on server' });
+  if (!botToken || !channelId) {
+    return res.status(500).json({ error: 'Discord Bot Token or Channel ID missing' });
   }
 
-  // Format the message for Discord
+  // The official Discord API endpoint for sending a message
+  const discordApiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
+
+  // Format the message with our new Interactive Buttons
   const payload = {
-    username: "Hobby Corner FAQ Bot",
     embeds: [
       {
         title: "🚨 New FAQ Question Submitted",
         color: 16738816, // Tangerine Accent
         fields: [
-          {
-            name: "Customer Email",
-            value: email || "No email provided",
-            inline: false
-          },
-          {
-            name: "Question",
-            value: question,
-            inline: false
-          }
+          { name: "Customer Email", value: email || "No email provided", inline: false },
+          { name: "Question", value: question, inline: false }
         ],
         timestamp: new Date().toISOString()
+      }
+    ],
+    components: [
+      {
+        type: 1, // Action Row (a container for buttons)
+        components: [
+          {
+            type: 2, // Button
+            style: 3, // Green button
+            label: "Answer Question",
+            custom_id: `answer_faq`, // We will use this ID to listen for the click later!
+          },
+          {
+            type: 2, // Button
+            style: 4, // Red button
+            label: "Ignore",
+            custom_id: `ignore_faq`,
+          }
+        ]
       }
     ]
   };
 
   try {
-    // Send to Discord
-    const discordRes = await fetch(webhookUrl, {
+    const discordRes = await fetch(discordApiUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bot ${botToken}` // Bots must authorize like this!
+      },
       body: JSON.stringify(payload)
     });
 
     if (!discordRes.ok) {
-      throw new Error('Failed to send message to Discord');
+      const errorData = await discordRes.text();
+      console.error("Discord API Error:", errorData);
+      throw new Error('Failed to send message via Discord Bot');
     }
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error("Discord Webhook Error:", error);
+    console.error("Server Error:", error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
