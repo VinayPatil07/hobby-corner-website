@@ -31,7 +31,6 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', controlHeader);
   }, [lastScrollY]);
 
-  // UPDATED: Now perfectly matches the Footer's navigation list
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'Events', href: '/events' },
@@ -89,7 +88,7 @@ export const Header = () => {
                 </a>
                 <a href="https://www.youtube.com/@thehobbycorner208" className="hover:text-tangerine-accent transition-transform hover:-translate-y-0.5"><Youtube size={19} /></a>
                 <a href="https://www.instagram.com/thehobbycorner/" className="hover:text-tangerine-accent transition-transform hover:-translate-y-0.5"><Instagram size={18} /></a>
-                <a href="#" className="hover:text-tangerine-accent transition-transform hover:-translate-y-0.5"><Facebook size={18} /></a>
+                <a href="https://www.facebook.com/Thehobbycorner/" className="hover:text-tangerine-accent transition-transform hover:-translate-y-0.5"><Facebook size={18} /></a>
               </div>
             </div>
 
@@ -105,12 +104,13 @@ export const Header = () => {
           </div>
         </div>
 
+        {/* --- FIX: CHANGED fixed TO absolute top-full --- */}
         {/* MOBILE MENU DRAWER */}
         <div className={`
-          fixed inset-0 top-[88px] z-40 bg-navy-base/95 backdrop-blur-md transition-all duration-300 xl:hidden
+          absolute top-full left-0 w-full h-screen z-40 bg-navy-base/95 backdrop-blur-md transition-all duration-300 xl:hidden
           ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
         `}>
-          <nav className="flex flex-col items-center justify-center h-full space-y-8 pb-20">
+          <nav className="flex flex-col items-center pt-16 h-full space-y-8 pb-20">
             {navItems.map((item) => (
               <Link
                 key={item.name}
