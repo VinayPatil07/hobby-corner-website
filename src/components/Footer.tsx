@@ -31,7 +31,7 @@ export const Footer = () => {
             </div>
             
             <p className="font-serif text-soft-gray-blue text-base leading-relaxed max-w-sm">
-              Serving the Iowa City community since 1976. Your foundational hub for model builders, 
+              Serving the Iowa City community since 1976. Your hub for model builders, 
               tabletop gamers, and RC enthusiasts.
             </p>
 
