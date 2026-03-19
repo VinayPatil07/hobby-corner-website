@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { Plus, Image as ImageIcon, Trash2, Globe, Lock } from 'lucide-react';
+import { Plus, Image as ImageIcon, Trash2} from 'lucide-react';
 
 // Added this interface to tell TypeScript about onSelect
 interface BlogModuleProps {

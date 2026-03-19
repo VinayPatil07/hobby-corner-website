@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
 import { 
   CalendarDays, ArrowRight, Tag, 
-  Archive, Loader2, X, BookOpen, Search
+  Archive, Loader2, X, Search
 } from 'lucide-react';
 
 export const Blog = () => {

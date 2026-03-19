@@ -1,7 +1,7 @@
 import { 
   XCircle, Send, Image as ImageIcon, Loader2, 
   Bold, Italic, Underline as UnderlineIcon, List, Heading1, Heading2, 
-  Tag as TagIcon, AlignLeft, AlignCenter, AlignRight, AlignJustify, 
+  Tag as TagIcon, AlignLeft, AlignCenter, AlignRight, 
   Undo, Redo, Quote, Highlighter, ListOrdered
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
