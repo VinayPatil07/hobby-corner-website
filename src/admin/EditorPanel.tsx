@@ -163,7 +163,27 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
       })
       .eq('id', item.id);
 
-    if (!error) { onRefresh(); onClose(); }
+    if (!error) {
+      // TRIGGER FAQ EMAIL
+      if (item.email) {
+        try {
+          await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: item.email, // Matches api/send-email.mjs 'to'
+              subject: 'Hobby Corner: Your Question has been Answered!',
+              question: item.question,
+              answer: editor?.getHTML()
+            })
+          });
+        } catch (e) {
+          console.warn("FAQ email service unreachable.");
+        }
+      }
+      onRefresh(); 
+      onClose(); 
+    }
   };
 
   const handleFaqDismiss = async () => {
@@ -174,20 +194,24 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
   const handleOrderStatus = async (status: string) => {
     const { error } = await supabase.from('special_orders').update({ status, is_read: true }).eq('id', item.id);
     if (!error) {
-      // Background Email Trigger
-      try {
-        fetch('/api/order-status-email', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ 
-            email: item.email, 
-            customer_name: item.customer_name, 
-            item_name: item.item_name, 
-            status: status,
-            reason: status === 'unavailable' ? unavailableReason : undefined
-          }) 
-        });
-      } catch (e) { console.warn("Email service not reachable"); }
+      // TRIGGER ORDER STATUS EMAIL
+      if (item.email) {
+        try {
+          await fetch('/api/order-status-email', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ 
+              email: item.email, 
+              customer_name: item.customer_name, 
+              item_name: item.item_name, 
+              status: status,
+              reason: status === 'unavailable' ? unavailableReason : undefined
+            }) 
+          });
+        } catch (e) { 
+          console.warn("Order update email failed."); 
+        }
+      }
       onRefresh(); 
       onClose();
     }
