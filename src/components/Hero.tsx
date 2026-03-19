@@ -39,7 +39,6 @@ export const Hero = () => {
                 <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
               </Link>
 
-              {/* FIXED: ONLINE STORE BUTTON ANIMATION */}
               <a 
                 href="https://hobbyrising.com/" 
                 target="_blank" 
@@ -52,7 +51,11 @@ export const Hero = () => {
             </div>
 
             <div className="pt-8 border-t-2 border-dashed border-navy-base/20">
-              <div className="flex flex-wrap items-center whitespace-nowrap">
+              {/* FIX: Removed flex-wrap, added overflow-x-auto, and hid the scrollbar */}
+              <div 
+                className="flex items-center overflow-x-auto whitespace-nowrap w-full pb-2"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
                 {shopCategories.map((category, index) => (
                   <div key={category} className="flex items-center">
                     <span className="text-[10px] font-black uppercase tracking-[0.15em] text-navy-base/60 hover:text-navy-base transition-colors cursor-default">
@@ -67,7 +70,8 @@ export const Hero = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-7 relative">
+          {/* FIX: Added 'hidden lg:block' to hide the entire image section on mobile */}
+          <div className="hidden lg:block lg:col-span-7 relative">
             <div className="relative h-[450px] lg:h-[580px] w-full lg:-mr-12">
               
               {/* IMAGE 1: MAIN SHOP */}

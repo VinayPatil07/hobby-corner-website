@@ -33,7 +33,8 @@ export const FeaturesAndCommunity = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
             
             {/* LEFT SIDE: IN-STORE SLIDESHOW & TEXT */}
-            <div className="flex flex-col border-2 border-navy-base bg-white shadow-[4px_4px_0px_0px_rgba(10,35,66,1)] overflow-hidden">
+            {/* FIX: Added order-2 lg:order-1 to push it down on mobile, but keep it left on desktop */}
+            <div className="order-2 lg:order-1 flex flex-col border-2 border-navy-base bg-white shadow-[4px_4px_0px_0px_rgba(10,35,66,1)] overflow-hidden">
               {/* Slideshow Area */}
               <div className="h-56 lg:h-60 relative bg-navy-base border-b-2 border-navy-base">
                 {storeImages.map((img, index) => (
@@ -91,17 +92,16 @@ export const FeaturesAndCommunity = () => {
                 {/* Dashed Border */}
                 <div className="mt-auto pt-4 border-t-2 border-dashed border-navy-base/20 flex items-center justify-between">
                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-navy-base">1660 Sycamore St</span>
-                   <span className="text-[10px] font-black uppercase tracking-[0.12em] text-navy-base/60 hover:text-tangerine-accent transition-colors cursor-pointer"></span>
                 </div>
               </div>
             </div>
 
             {/* RIGHT SIDE: HEADER & ONLINE STORE BOX */}
-            <div className="flex flex-col justify-between h-full">
+            {/* FIX: Added order-1 lg:order-2 to make this show up FIRST on mobile screens */}
+            <div className="order-1 lg:order-2 flex flex-col justify-between h-full">
               {/* Top Text Block */}
               <div className="mb-6 lg:mb-0">
                 
-                {/* NEW TAG STYLED FROM HERO */}
                 <div className="inline-block self-start px-3 py-1 bg-white border-2 border-navy-base text-navy-base text-[9px] font-black uppercase tracking-[0.2em] mb-6 shadow-[2px_2px_0px_0px_rgba(10,35,66,1)]">
                   Two Ways to Shop • Local & Online
                 </div>
