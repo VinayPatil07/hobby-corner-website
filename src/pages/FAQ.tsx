@@ -106,30 +106,21 @@ export const FAQPage = () => {
     setIsSubmitting(true);
     
     try {
-      // 1. Save to Supabase
-      const { error: dbError } = await supabase
-        .from('faqs')
-        .insert([{ 
-          question: questionText, 
-          email: emailText, 
-          status: 'pending',
-          is_read: false // This triggers your new notification badge
-        }]);
+      // Call the backend API - It will save to Supabase AND send the Discord alert
+      const response = await fetch('/api/submit-faq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          question: questionText,
+          email: emailText // Added the email here!
+        }),
+      });
 
-      if (dbError) throw dbError;
-
-      // 2. Try notification (Optional - won't crash if it 404s)
-      try {
-        await fetch('/api/submit-faq', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: questionText }),
-        });
-      } catch (notiErr) {
-        console.warn("Discord notification skipped or API route not found.");
+      if (!response.ok) {
+        throw new Error('API route failed');
       }
 
-      // 3. Success UI
+      // Success UI
       setIsSubmitted(true);
       setQuestionText("");
       setEmailText("");
