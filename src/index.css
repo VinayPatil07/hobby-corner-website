@@ -17,3 +17,24 @@
     scrollbar-width: none;
   }
 }
+
+/* FORCE BLOG SPACING */
+.prose-news p {
+  margin-bottom: 2.5rem !important; /* Forces a massive gap between paragraphs */
+  display: block !important;
+  line-height: 1.8 !important;
+}
+
+.prose-news br {
+  content: "";
+  margin: 1.5rem 0;
+  display: block;
+}
+
+/* Fix for the "Gamer's Glossary" Bold terms */
+.prose-news strong {
+  display: block;
+  margin-top: 2rem;
+  color: #0a2342;
+  font-size: 1.25rem;
+}

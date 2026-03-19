@@ -8,9 +8,10 @@ import { Community } from './components/Community';
 import { SpecialOrders } from './pages/SpecialOrders'; 
 import ServicesPage from './pages/Services';
 import { EventsPage } from './pages/Events';
-import BlogPage from './pages/Blog';
-import FAQPage from './pages/FAQ';
-import AdminFAQs from './AdminFAQs'; // Adjust the path based on where you saved it
+import { Blog } from './pages/Blog'; 
+import AdminTerminal from './admin/AdminTerminal';
+import BlogPostDetail from './pages/BlogPostDetail';
+import { FAQPage } from './pages/FAQ';
 
 
 const HomePage = () => (
@@ -33,9 +34,10 @@ function App() {
             <Route path="/special-orders" element={<SpecialOrders />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/services" element={<ServicesPage />} />
-            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogPostDetail />} />
             <Route path="/faq" element={<FAQPage />} />
-            <Route path="/admin/faqs" element={<AdminFAQs />} />
+            <Route path="/admin/terminal" element={<AdminTerminal />} />
           </Routes>
         </main>
         <Footer />

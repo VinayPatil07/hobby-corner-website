@@ -62,6 +62,7 @@ export const FAQPage = () => {
   const [questionText, setQuestionText] = useState("");
   const [emailText, setEmailText] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch answered FAQs from Supabase when the page loads
   useEffect(() => {
@@ -69,7 +70,7 @@ export const FAQPage = () => {
       const { data, error } = await supabase
         .from('faqs')
         .select('*')
-        .eq('status', 'answered') // Only get answered questions
+        .eq('status', 'answered') 
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -83,12 +84,9 @@ export const FAQPage = () => {
   }, []);
 
   // Merge hardcoded FAQs with live FAQs from the database
-  // Merge hardcoded FAQs with live FAQs from the database
   const displayFaqs = faqs.map(section => {
-    // Find any live FAQs that match the current category loop
     const dynamicQuestions = liveFaqs
       .filter(faq => 
-        // We use .trim() and .toLowerCase() to prevent small typos from breaking the site
         faq.category?.trim().toLowerCase() === section.category.trim().toLowerCase()
       )
       .map(faq => ({ q: faq.question, a: faq.answer }));
@@ -103,55 +101,43 @@ export const FAQPage = () => {
     setOpenIndex(openIndex === id ? null : id);
   };
 
-const handleFormSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsSubmitting(true);
+    
     try {
-      // 1. Save the question to Supabase
+      // 1. Save to Supabase
       const { error: dbError } = await supabase
         .from('faqs')
-        .insert([
-          { 
-            email: emailText || null, // Changed from customer_email to email
-            question: questionText,
-            status: 'pending' 
-          }
-        ]);
+        .insert([{ 
+          question: questionText, 
+          email: emailText, 
+          status: 'pending',
+          is_read: false // This triggers your new notification badge
+        }]);
 
       if (dbError) throw dbError;
 
-      // 2. Ping Discord via Vercel Function
-      // We use the local state variables (emailText/questionText) here
-      const response = await fetch('/api/submit-faq', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: emailText, 
-          question: questionText 
-        }), 
-      });
-
-      if (response.status === 200 || response.status === 500) {
-        setIsSubmitted(true);
-        setQuestionText("");
-        setEmailText("");
-        setTimeout(() => setIsSubmitted(false), 5000);
+      // 2. Try notification (Optional - won't crash if it 404s)
+      try {
+        await fetch('/api/submit-faq', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: questionText }),
+        });
+      } catch (notiErr) {
+        console.warn("Discord notification skipped or API route not found.");
       }
 
-      if (!response.ok) {
-        throw new Error('Failed to send Discord notification');
-      }
-
-      // 3. Show Success State
+      // 3. Success UI
       setIsSubmitted(true);
       setQuestionText("");
       setEmailText("");
-      
-      setTimeout(() => setIsSubmitted(false), 5000);
-
-    } catch (error) {
-      console.error('Failed to submit question:', error);
-      alert("Oops! Something went wrong saving your message. Please try calling the store.");
+    } catch (err) {
+      console.error("Error submitting question:", err);
+      alert("Failed to submit. Please try calling the store!");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -235,7 +221,10 @@ const handleFormSubmit = async (e: React.FormEvent) => {
                                 ${isOpen ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 py-0 opacity-0'}`}
                             >
                               <div className="pt-4 border-t-2 border-dashed border-navy-base/10">
-                                {faq.a}
+                                <div 
+                                  className="prose prose-slate max-w-none font-serif text-muted-cerulean"
+                                  dangerouslySetInnerHTML={{ __html: faq.a }} 
+                                />
                               </div>
                             </div>
                           </div>
@@ -248,7 +237,6 @@ const handleFormSubmit = async (e: React.FormEvent) => {
 
               {/* Ask A Question Form */}
               <div className="bg-white border-2 border-navy-base p-8 lg:p-10 shadow-[8px_8px_0px_0px_rgba(10,35,66,1)] mt-16 relative">
-                {/* Visual Tape */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-white/60 border border-navy-base/10 shadow-sm rotate-1 z-20"></div>
                 
                 <div className="flex items-center gap-3 mb-6 border-b-2 border-navy-base pb-4">
@@ -260,6 +248,7 @@ const handleFormSubmit = async (e: React.FormEvent) => {
                   <div className="bg-tangerine-accent/10 border-2 border-tangerine-accent p-8 text-center animate-in fade-in duration-500">
                     <h4 className="font-black text-navy-base uppercase tracking-widest text-sm mb-2">Message Received!</h4>
                     <p className="font-serif text-muted-cerulean text-sm">Thanks for asking! If you left your email, we will notify you as soon as our staff replies.</p>
+                    <button onClick={() => setIsSubmitted(false)} className="mt-4 text-[10px] font-black uppercase underline text-navy-base hover:text-tangerine-accent">Ask another question</button>
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} className="space-y-5">
@@ -294,10 +283,11 @@ const handleFormSubmit = async (e: React.FormEvent) => {
 
                     <button 
                       type="submit"
-                      className="w-full group relative inline-flex items-center justify-center gap-2 bg-tangerine-accent text-navy-base border-2 border-navy-base px-6 py-4 font-black uppercase tracking-[0.12em] text-[11px] transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(10,35,66,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+                      disabled={isSubmitting}
+                      className="w-full group relative inline-flex items-center justify-center gap-2 bg-tangerine-accent text-navy-base border-2 border-navy-base px-6 py-4 font-black uppercase tracking-[0.12em] text-[11px] transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(10,35,66,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Submit Question
-                      <Send size={14} strokeWidth={3} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      {isSubmitting ? 'Sending...' : 'Submit Question'}
+                      {!isSubmitting && <Send size={14} strokeWidth={3} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
                     </button>
                   </form>
                 )}
@@ -306,9 +296,8 @@ const handleFormSubmit = async (e: React.FormEvent) => {
             </div>
 
             {/* RIGHT: CONTACT SIDEBAR */}
-            <div className="lg:col-span-5 space-y-8 sticky top-32">
+            <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-32">
               
-              {/* Need More Help Box */}
               <div className="bg-tangerine-accent border-2 border-navy-base p-10 shadow-[6px_6px_0px_0px_#0a2342] rotate-1">
                 <div className="flex items-center gap-3 mb-4">
                   <Phone className="text-navy-base" size={28} />
@@ -328,7 +317,6 @@ const handleFormSubmit = async (e: React.FormEvent) => {
                 </div>
               </div>
 
-              {/* Store Location Info */}
               <div className="bg-[#fdfcf5] border-2 border-navy-base p-8 shadow-[6px_6px_0px_0px_#0a2342] -rotate-1">
                 <div className="flex items-center gap-3 mb-6 border-b-2 border-navy-base pb-4">
                   <MapPin className="text-tangerine-accent" size={24} />

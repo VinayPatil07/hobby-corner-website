@@ -1,18 +1,22 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useSpecialOrder } from '../hooks/useSpecialOrder';
 import { 
   ArrowRight, Truck, Camera, Hash, Info, 
-  ClipboardList, Package, PhoneCall, AlertCircle 
+  ClipboardList, Package, PhoneCall, AlertCircle, CheckCircle2 
 } from 'lucide-react';
 
 export const SpecialOrders = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const { submitOrder, isSubmitting, submitted, error, setSubmitted } = useSpecialOrder();
+  
+  // NEW: State to hold the selected file so we can show the file name to the user
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submit Clicked! React State says the file is:", selectedFile); // The tracking beacon
     if (formRef.current) {
-      submitOrder(formRef.current);
+      submitOrder(formRef.current, selectedFile);
     }
   };
 
@@ -29,7 +33,10 @@ export const SpecialOrders = () => {
             We've received your request. Our staff will coordinate with our distributors and contact you via phone within a week.
           </p>
           <button 
-            onClick={() => setSubmitted(false)}
+            onClick={() => {
+              setSubmitted(false);
+              setSelectedFile(null); // Reset file state when submitting another
+            }}
             className="bg-navy-base text-white px-8 py-4 font-black uppercase text-[11px] tracking-[0.2em] hover:bg-tangerine-accent transition-all shadow-[4px_4px_0px_0px_#ff9b54]"
           >
             Submit Another Request
@@ -42,7 +49,7 @@ export const SpecialOrders = () => {
   return (
     <div className="min-h-screen bg-soft-gray-blue font-sans selection:bg-tangerine-accent selection:text-navy-base">
       
-      {/* 1. HERO SECTION: Brand Consistent Palette [cite: 33] */}
+      {/* 1. HERO SECTION */}
       <section className="py-12 lg:py-16 border-b-2 border-navy-base relative overflow-hidden bg-white/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -89,8 +96,7 @@ export const SpecialOrders = () => {
                 <Truck className="text-navy-base opacity-20" size={32} />
               </div>
 
-              {/* Form implementation uses logic from useSpecialOrder hook */}
-              <form ref={formRef} className="space-y-6" onSubmit={handleSubmit}>
+              <form ref={formRef} className="space-y-6" onSubmit={handleSubmit} encType="multipart/form-data">
                 {/* Error Notification */}
                 {error && (
                   <div className="p-4 bg-red-50 border-2 border-red-600 text-red-600 text-xs font-black uppercase tracking-widest flex items-center gap-2">
@@ -148,14 +154,44 @@ export const SpecialOrders = () => {
                       </div>
                     </div>
                   </div>
+
+                  {/* NEW: Additional Notes Field */}
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-navy-base flex items-center gap-2">
+                       Additional Notes <span className="text-[8px] opacity-40 italic lowercase">(Optional)</span>
+                    </label>
+                    <textarea 
+                      name="description" 
+                      className="w-full border-2 border-navy-base p-3 text-sm font-serif outline-none bg-soft-gray-blue/20 focus:bg-white transition-colors min-h-[100px] resize-y" 
+                      placeholder="Any extra details? e.g., 'Only looking for the blue version', 'Need it before Friday', etc." 
+                    />
+                  </div>
+
+                  {/* UPDATED: Photo Upload with State Feedback and Name Attribute */}
                   <div className="space-y-2">
                     <label className="text-[9px] font-black uppercase tracking-widest text-navy-base flex items-center gap-2">
                       Reference Photo <span className="text-[8px] opacity-40 italic lowercase">(Optional)</span>
                     </label>
-                    <div className="relative border-2 border-dashed border-navy-base/30 bg-soft-gray-blue/5 p-6 text-center group hover:bg-white hover:border-tangerine-accent transition-all cursor-pointer">
-                      <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
-                      <Camera size={20} className="mx-auto text-navy-base/20 group-hover:text-tangerine-accent mb-2 transition-colors" />
-                      <p className="text-[9px] font-black uppercase tracking-tighter text-navy-base/40">Click to upload or drag photo</p>
+                    <div className={`relative border-2 border-dashed p-6 text-center group transition-all cursor-pointer ${selectedFile ? 'border-tangerine-accent bg-tangerine-accent/5' : 'border-navy-base/30 bg-soft-gray-blue/5 hover:bg-white hover:border-tangerine-accent'}`}>
+                      <input 
+                        type="file" 
+                        name="image" 
+                        className="absolute inset-0 opacity-0 cursor-pointer" 
+                        accept="image/*" 
+                        onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                      />
+                      {selectedFile ? (
+                        <>
+                          <CheckCircle2 size={24} className="mx-auto text-tangerine-accent mb-2" />
+                          <p className="text-[10px] font-black uppercase tracking-widest text-navy-base">Image Attached</p>
+                          <p className="text-[9px] font-serif italic text-navy-base/60 mt-1">{selectedFile.name}</p>
+                        </>
+                      ) : (
+                        <>
+                          <Camera size={20} className="mx-auto text-navy-base/20 group-hover:text-tangerine-accent mb-2 transition-colors" />
+                          <p className="text-[9px] font-black uppercase tracking-tighter text-navy-base/40">Click to upload or drag photo</p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -172,14 +208,13 @@ export const SpecialOrders = () => {
               </form>
             </div>
 
-            {/* RIGHT: STRETCHED SIDEBAR - High Readability Scaling */}
+            {/* RIGHT: STRETCHED SIDEBAR */}
             <div className="lg:col-span-5 space-y-10">
               <div className="relative">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/60 border border-navy-base/10 shadow-sm rotate-1 z-20"></div>
                 
                 <div className="bg-[#fdfcf5] border-2 border-navy-base p-10 lg:p-12 shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] rotate-1">
                   
-                  {/* Stretched Info Steps */}
                   <div className="space-y-12 mb-12">
                     <div className="flex gap-5">
                       <ClipboardList className="text-tangerine-accent shrink-0" size={24} />
@@ -212,7 +247,6 @@ export const SpecialOrders = () => {
                     </div>
                   </div>
 
-                  {/* Stretched Policy Section */}
                   <div className="pt-10 border-t-2 border-dashed border-navy-base/20">
                     <div className="flex items-center gap-2 mb-6 text-navy-base">
                       <AlertCircle size={18} strokeWidth={3} />
@@ -237,7 +271,6 @@ export const SpecialOrders = () => {
                 </div>
               </div>
 
-              {/* Photo Advice Clipping */}
               <div className="p-8 border-2 border-dashed border-navy-base/30 bg-white/40">
                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-navy-base mb-4 text-tangerine-accent">Why provide a photo?</h4>
                 <p className="font-serif text-muted-cerulean text-base italic leading-relaxed">
