@@ -12,7 +12,8 @@ import { Blog } from './pages/Blog';
 import AdminTerminal from './admin/AdminTerminal';
 import BlogPostDetail from './pages/BlogPostDetail';
 import { FAQPage } from './pages/FAQ';
-
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 const HomePage = () => (
   <>
@@ -38,6 +39,8 @@ function App() {
             <Route path="/blog/:id" element={<BlogPostDetail />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/admin/terminal" element={<AdminTerminal />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
           </Routes>
         </main>
         <Footer />

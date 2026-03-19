@@ -112,8 +112,8 @@ export const Footer = () => {
         <div className="pt-8 border-t border-muted-cerulean/20 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] uppercase tracking-[0.3em] font-black text-soft-gray-blue/60">
           <p>© 2026 The Hobby Corner. Established 1976.</p>
           <div className="flex space-x-8">
-            <a href="#" className="hover:text-tangerine-accent transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-tangerine-accent transition-colors">Terms of Service</a>
+            <a href="/privacy" className="hover:text-tangerine-accent transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-tangerine-accent transition-colors">Terms of Service</a>
             <span className="text-muted-cerulean/40">Design by Vinay Patil</span>
           </div>
         </div>
