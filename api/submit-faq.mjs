@@ -53,6 +53,7 @@ export default async function handler(req, res) {
   const discordApiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
   const payload = {
+    content: "@here 🚨 New FAQ Question Submitted!", // <-- Add this line to trigger the ping
     embeds: [
       {
         title: "🚨 New FAQ Question Submitted",

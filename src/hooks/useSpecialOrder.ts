@@ -48,6 +48,7 @@ export const useSpecialOrder = () => {
         image_url = publicUrl;
       }
 
+      // 1. SAVE TO DATABASE FIRST
       const { error: dbError } = await supabase
         .from('special_orders')
         .insert([
@@ -66,6 +67,25 @@ export const useSpecialOrder = () => {
 
       if (dbError) throw dbError;
 
+      // 2. TRIGGER DISCORD ALERT
+      try {
+        await fetch('/api/submit-special-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            customer_name: name,
+            item_name: itemName,
+            phone: phone,
+            brand: brand
+          })
+        });
+      } catch (discordErr) {
+        console.error("Failed to ping Discord, but order saved:", discordErr);
+      }
+
+      // 3. SHOW SUCCESS MESSAGE
       setSubmitted(true);
       form.reset();
 

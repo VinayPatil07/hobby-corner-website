@@ -5,6 +5,7 @@ export default async function handler(req, res) {
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL; // Reusing your existing webhook
 
   const payload = {
+    content: "@here 📦 New Special Order Request!", // <-- Add this line to trigger the ping
     embeds: [{
       title: "📦 NEW SPECIAL ORDER REQUEST",
       color: 16738816, // Hobby Corner Orange
