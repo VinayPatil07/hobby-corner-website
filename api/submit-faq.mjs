@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Discord keys missing' });
   }
 
-  const adminUrl = `https://hobby-corner-website.vercel.app/admin/faqs`;
+  const adminUrl = `https://hobby-corner-website.vercel.app/admin/terminal`;
   const discordApiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
   const payload = {
