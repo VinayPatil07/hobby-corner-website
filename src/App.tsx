@@ -14,6 +14,7 @@ import BlogPostDetail from './pages/BlogPostDetail';
 import { FAQPage } from './pages/FAQ';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import ScrollToTop from './components/ScrollToTop'; 
 
 const HomePage = () => (
   <>
@@ -27,6 +28,7 @@ const HomePage = () => (
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen bg-soft-gray-blue">
         <Header />
         <main>
