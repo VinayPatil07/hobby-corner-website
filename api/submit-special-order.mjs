@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const payload = {
     content: "@here 📦 New Special Order Request!", // <-- Add this line to trigger the ping
     embeds: [{
-      title: "📦 NEW SPECIAL ORDER REQUEST",
+      title: "📦 New Special Order Request",
       color: 16738816, // Hobby Corner Orange
       fields: [
         { name: "Customer", value: customer_name, inline: true },

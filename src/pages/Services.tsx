@@ -24,7 +24,7 @@ export const ServicesPage = () => {
               </h1>
               
               <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-xl">
-                Whether you need a motor re-soldered after a rough bash session or want to clear out your game shelf for store credit, our <span className="text-navy-base font-bold">in-house services</span> have you covered.
+                Whether you need a motor re-soldered after a rough session or want to clear out your game shelf for store credit, our <span className="text-navy-base font-bold">in-house services</span> have you covered.
               </p>
             </div>
             
@@ -163,7 +163,7 @@ export const ServicesPage = () => {
                     <h5 className="font-black uppercase tracking-widest text-navy-base text-xs mb-1">You Set the Price</h5>
                     <p className="font-serif text-muted-cerulean text-sm">You have complete control over what you want the game to sell for on our shelf.</p>
                   </div>
-                </div>
+                </div> 
 
                 <div className="flex gap-5 items-start">
                   <div className="w-8 h-8 shrink-0 bg-soft-gray-blue border-2 border-navy-base flex items-center justify-center text-navy-base font-black">3</div>

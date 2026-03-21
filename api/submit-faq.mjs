@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         'Prefer': 'return=minimal'
       },
       body: JSON.stringify({ 
-        email: email,      // Make sure this matches your 'email' column
+        email: email,     
         question: question, 
         status: 'pending' 
       })
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
   const discordApiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
 
   const payload = {
-    content: "@here 🚨 New FAQ Question Submitted!", // <-- Add this line to trigger the ping
+    content: "@here 🚨 New FAQ Question Submitted!", 
     embeds: [
       {
         title: "🚨 New FAQ Question Submitted",
