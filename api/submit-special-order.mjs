@@ -2,13 +2,15 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send();
 
   const { customer_name, item_name, phone, brand } = req.body;
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL; // Reusing your existing webhook
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL; 
 
   const payload = {
-    content: "@here 📦 New Special Order Request!", // <-- Add this line to trigger the ping
+    content: "@here 📦 New Special Order Request!", 
+    username: "The Hobby Corner Bot",
+    avatar_url: "https://hobby-corner-website.vercel.app/logo.png",
     embeds: [{
       title: "📦 New Special Order Request",
-      color: 16738816, // Hobby Corner Orange
+      color: 16738816, 
       fields: [
         { name: "Customer", value: customer_name, inline: true },
         { name: "Phone", value: phone, inline: true },
