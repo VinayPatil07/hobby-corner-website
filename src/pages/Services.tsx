@@ -23,7 +23,7 @@ export const ServicesPage = () => {
                 <span className="text-tangerine-accent italic">Keep Playing.</span>
               </h1>
               
-              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-xl">
+              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-7xll">
                 Whether you need a motor re-soldered after a rough session or want to clear out your game shelf for store credit, our <span className="text-navy-base font-bold">in-house services</span> have you covered.
               </p>
             </div>

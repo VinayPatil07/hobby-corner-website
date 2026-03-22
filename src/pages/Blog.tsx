@@ -124,7 +124,7 @@ export const Blog = () => {
                 )}
               </h1>
               
-              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-xl italic">
+              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-7xll italic">
                 {(activeTags.length > 0 || searchQuery) 
                   ? "Showing dispatches matching your current filters." 
                   : "Explore terminology guides, store news, and hobbyist highlights."}

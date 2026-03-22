@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   CalendarDays, Clock, 
   Dices, Rocket, Sword, Users, 
@@ -11,6 +11,7 @@ import BT2 from '../assets/BT2.png';
 import SWL from '../assets/SWL.png';
 import WH from '../assets/WH.png';
 
+
 const gamingEvents = [
   {
     title: "Board Game Night",
@@ -20,7 +21,7 @@ const gamingEvents = [
     description: "Play the greatest and newest games out there every Thursday. Board game night is the best time to try out a new game or play a game you already love.",
     note: "Entry fee is credited back to your account.",
     icon: <Dices className="text-tangerine-accent" size={32} />,
-    image: BGN2 // <-- Use the imported variable here (No quotes!)
+    image: BGN2 
   },
   {
     title: "BattleTech",
@@ -51,52 +52,53 @@ const gamingEvents = [
   }
 ];
 
-// --- DATA: INTERACTIVE CALENDAR DETAILS ---
+// UPDATED: High-contrast colors and borders for the calendar pills
 const eventDetails = {
   boardGames: {
     title: "Board Game Night",
     time: "5:00 PM – 11:00 PM",
-    color: "bg-tangerine-accent",
+    color: "bg-tangerine-accent text-navy-base",
     description: "The best time to try out a new game or play a favorite. Our community is friendly and inviting to everyone.",
     price: "$5.00 Store Credit Entry"
   },
   battleTech: {
     title: "BattleTech",
     time: "10:00 AM – 3:30 PM",
-    color: "bg-cerulean-base",
+    color: "bg-navy-base text-white",
     description: "World’s greatest armored combat game. Miniatures, RPG play, and hobby painting.",
     price: "Free to Play"
   },
   starWars: {
     title: "Star Wars: Legion",
     time: "12:00 PM – 4:30 PM",
-    color: "bg-red-500",
+    color: "bg-[#c1121f] text-white", // Deep Red
     description: "Lead your troops to victory in a two-player miniatures game of thrilling infantry battles.",
     price: "Free to Play"
   },
   warhammer: {
     title: "Warhammer 40K",
     time: "12:00 PM – 4:30 PM",
-    color: "bg-green-600",
+    color: "bg-[#2d6a4f] text-white", // Deep Green
     description: "The armies of Humanity battle for survival against ravenous alien menaces.",
     price: "Free to Play"
   }
 };
 
-// --- COMPONENT: INTERACTIVE CALENDAR ---
 const InteractiveCalendar = () => {
-  // 1. STATE: Start on the current month (e.g. March 2026)
   const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 1));
   const [hoveredEvent, setHoveredEvent] = useState<any>(null);
   
+  // 1. ADDED: A reference to track where "today" is on the screen
+  const todayRef = useRef<HTMLDivElement>(null);
+  
+  const today = new Date(); 
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth(); // 0-indexed (0 = Jan, 11 = Dec)
+  const month = currentDate.getMonth(); 
   const monthName = currentDate.toLocaleString('default', { month: 'long' });
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfMonth = new Date(year, month, 1).getDay();
 
-  // 2. HOLIDAY ENGINE: A lightweight dictionary of major US dates
   const getHolidays = (y: number, m: number) => {
     const fixedHolidays: Record<number, Record<number, string>> = {
       0: { 1: "New Year's Day" },
@@ -124,7 +126,6 @@ const InteractiveCalendar = () => {
 
   const holidays = getHolidays(year, month);
 
-  // 3. DYNAMIC SCHEDULE ENGINE
   const schedule: Record<number, any[]> = {};
   for (let d = 1; d <= daysInMonth; d++) {
     const date = new Date(year, month, d);
@@ -140,25 +141,27 @@ const InteractiveCalendar = () => {
     if (dailyEvents.length > 0) schedule[d] = dailyEvents;
   }
 
-  // 4. CALENDAR RENDER LOGIC
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const dayCells = [];
   
   for (let i = 0; i < firstDayOfMonth; i++) {
-    dayCells.push(<div key={`pad-${i}`} className="min-h-[100px] lg:min-h-[120px] bg-soft-gray-blue/20" />);
+    dayCells.push(<div key={`pad-${i}`} className="min-h-[100px] lg:min-h-[120px] bg-soft-gray-blue/50" />);
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
     const dailyEvents = schedule[day] || [];
     const holidayName = holidays[day];
+    
+    const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
 
     dayCells.push(
       <div 
         key={`day-${day}`} 
-        className="min-h-[100px] lg:min-h-[120px] bg-white p-2 hover:bg-soft-gray-blue/10 transition-colors group flex flex-col relative"
+        ref={isToday ? todayRef : null} // 2. ADDED: We attach the "target" here if this cell is today!
+        className={`min-h-[100px] lg:min-h-[120px] p-2 transition-colors group flex flex-col relative ${isToday ? 'bg-tangerine-accent/10 shadow-inner' : 'bg-white hover:bg-soft-gray-blue/20'}`}
       >
-        <div className="flex justify-between items-start mb-1">
-          <span className="text-sm font-black text-navy-base group-hover:text-tangerine-accent transition-colors">
+        <div className="flex justify-between items-start mb-2">
+          <span className={`text-sm font-black transition-colors ${isToday ? 'text-tangerine-accent' : 'text-navy-base group-hover:text-tangerine-accent'}`}>
             {day}
           </span>
           {holidayName && (
@@ -171,15 +174,15 @@ const InteractiveCalendar = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-1 overflow-hidden">
+        <div className="flex flex-col gap-1.5 overflow-hidden">
           {dailyEvents.map((ev, i) => (
             <div 
               key={i}
               onMouseEnter={() => setHoveredEvent({ ...ev, day, monthName, year })}
-              onMouseLeave={() => setHoveredEvent(null)}
-              className={`w-full ${ev.color} px-2 py-1 cursor-help flex items-center shadow-sm hover:opacity-80 transition-opacity`}
+              onClick={() => setHoveredEvent({ ...ev, day, monthName, year })} 
+              className={`w-full ${ev.color} border-2 border-navy-base px-2 py-1 cursor-pointer lg:cursor-help flex items-center shadow-[2px_2px_0px_0px_rgba(10,35,66,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all`}
             >
-              <span className="text-[9px] font-black text-white uppercase truncate tracking-tight">
+              <span className="text-[9px] font-black uppercase leading-[1.1] line-clamp-2 tracking-tight">
                 {ev.title}
               </span>
             </div>
@@ -189,22 +192,45 @@ const InteractiveCalendar = () => {
     );
   }
 
+  const totalCells = dayCells.length;
+  const remainingCells = 42 - totalCells; 
+  if (remainingCells > 0 && remainingCells < 7) {
+      for (let i = 0; i < remainingCells; i++) {
+        dayCells.push(<div key={`pad-end-${i}`} className="min-h-[100px] lg:min-h-[120px] bg-soft-gray-blue/50" />);
+      }
+  }
+
+  // 3. ADDED: This effect fires when the calendar loads or changes months.
+  // If it finds the "target" (today), it smoothly scrolls it to the center of the mobile screen.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (todayRef.current) {
+        todayRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',   // Prevents the whole page from jumping down vertically
+          inline: 'center',   // Centers it horizontally on mobile
+        });
+      }
+    }, 150); // Small delay to ensure the mobile layout has finished rendering before scrolling
+    return () => clearTimeout(timer);
+  }, [currentDate]);
+
   const handlePrevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
   const handleNextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
+  const handleToday = () => setCurrentDate(new Date(today.getFullYear(), today.getMonth(), 1));
 
   return (
     <div className="w-full">
       <div className="flex flex-col lg:flex-row bg-white border-2 border-navy-base shadow-[8px_8px_0px_0px_#0a2342] overflow-hidden">
         
-        {/* LEFT PANE: Calendar Grid */}
         <div className="flex-1 flex flex-col border-b-2 lg:border-b-0 lg:border-r-2 border-navy-base">
           
           <div className="bg-navy-base text-white p-4 lg:p-6 flex flex-col sm:flex-row justify-between items-center gap-4 border-b-2 border-navy-base">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center justify-between w-full sm:w-auto gap-6">
               <button onClick={handlePrevMonth} className="p-2 hover:bg-white/10 hover:text-tangerine-accent transition-all rounded-full group">
                 <ChevronLeft size={28} className="group-active:-translate-x-1 transition-transform" />
               </button>
-              <h3 className="text-2xl lg:text-3xl font-black uppercase italic tracking-widest min-w-[200px] text-center">
+              <h3 className="text-xl lg:text-3xl font-black uppercase italic tracking-widest min-w-[150px] lg:min-w-[200px] text-center">
                 {monthName} {year}
               </h3>
               <button onClick={handleNextMonth} className="p-2 hover:bg-white/10 hover:text-tangerine-accent transition-all rounded-full group">
@@ -212,62 +238,65 @@ const InteractiveCalendar = () => {
               </button>
             </div>
             <button 
-              onClick={() => setCurrentDate(new Date(2026, 2, 1))} 
-              className="text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white transition-colors border border-white/20 px-3 py-1 rounded"
+              onClick={handleToday} 
+              className="text-[10px] font-black uppercase tracking-widest text-navy-base bg-white hover:bg-tangerine-accent transition-colors border-2 border-transparent hover:border-navy-base px-4 py-2 w-full sm:w-auto"
             >
-              Today
+              Go To Today
             </button>
           </div>
 
-          <div className="grid grid-cols-7 gap-px bg-soft-gray-blue border-b border-soft-gray-blue">
-            {daysOfWeek.map(day => (
-              <div key={day} className="bg-white text-[9px] lg:text-[10px] font-black text-muted-cerulean uppercase tracking-[0.2em] py-3 text-center">
-                {day}
+          <div className="w-full overflow-x-auto no-scrollbar scroll-smooth">
+            <div className="min-w-[700px] lg:min-w-full flex flex-col h-full">
+              
+              <div className="grid grid-cols-7 gap-[2px] bg-navy-base border-b-[2px] border-navy-base">
+                {daysOfWeek.map(day => (
+                  <div key={day} className="bg-white text-[9px] lg:text-[10px] font-black text-navy-base uppercase tracking-[0.2em] py-3 text-center">
+                    {day}
+                  </div>
+                ))}
               </div>
-            ))}
+
+              <div className="grid grid-cols-7 gap-[2px] bg-navy-base flex-1">
+                {dayCells}
+              </div>
+
+            </div>
           </div>
 
-          <div className="grid grid-cols-7 gap-px bg-soft-gray-blue flex-1">
-            {dayCells}
-          </div>
         </div>
 
-        {/* RIGHT PANE: Interactive Slip */}
         <div className="w-full lg:w-[380px] xl:w-[420px] bg-[#fdfcf5] relative flex flex-col">
           {hoveredEvent ? (
             <div className="p-8 lg:p-10 animate-in fade-in slide-in-from-right-4 duration-300 h-full flex flex-col">
               <div className="flex justify-between items-start mb-6 border-b-4 border-double border-navy-base pb-4">
                 <div>
-                  <h4 className="text-2xl font-black text-navy-base uppercase tracking-tighter leading-none mb-2">{hoveredEvent.title}</h4>
+                  <h4 className="text-3xl font-black text-navy-base uppercase tracking-tighter leading-none mb-2">{hoveredEvent.title}</h4>
                   <p className="text-[10px] font-black text-tangerine-accent uppercase tracking-widest">
                     {hoveredEvent.monthName} {hoveredEvent.day}, {hoveredEvent.year}
                   </p>
                 </div>
-                <div className={`w-12 h-12 ${hoveredEvent.color} border-2 border-navy-base rotate-3 flex items-center justify-center text-white shrink-0`}>
-                   <Clock size={24} />
-                </div>
               </div>
               
               <div className="space-y-4 mb-8">
-                <div className="flex items-center gap-3 text-navy-base">
+                <div className="flex items-center gap-3 text-navy-base bg-soft-gray-blue/30 p-3 border-l-4 border-tangerine-accent">
                   <Clock size={16} strokeWidth={3} />
                   <span className="text-xs font-black uppercase tracking-widest">{hoveredEvent.time}</span>
                 </div>
-                <p className="font-serif text-muted-cerulean text-base italic leading-relaxed">
+                <p className="font-serif text-muted-cerulean text-lg italic leading-relaxed pt-2">
                   "{hoveredEvent.description}"
                 </p>
               </div>
 
-              <div className="bg-soft-gray-blue/30 border-l-4 border-navy-base p-5 mt-auto">
-                <p className="text-[10px] font-black uppercase text-navy-base tracking-widest mb-1">Entry Details</p>
-                <p className="text-sm font-serif font-bold text-muted-cerulean">{hoveredEvent.price}</p>
+              <div className="bg-white border-2 border-navy-base shadow-[4px_4px_0px_0px_#0a2342] p-5 mt-auto">
+                <p className="text-[10px] font-black uppercase text-navy-base/60 tracking-widest mb-1">Entry Details</p>
+                <p className="text-base font-black uppercase text-navy-base tracking-tight">{hoveredEvent.price}</p>
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full p-12 text-center opacity-60">
+            <div className="flex flex-col items-center justify-center h-full p-12 text-center opacity-60 min-h-[300px]">
               <Info className="text-navy-base mb-4" size={48} strokeWidth={1.5} />
               <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-navy-base">
-                Hover over an event <br />to view details
+                Tap an event <br />to view details
               </h4>
             </div>
           )}
@@ -278,12 +307,10 @@ const InteractiveCalendar = () => {
   );
 };
 
-// --- COMPONENT: MAIN PAGE ---
 export const EventsPage = () => {
   return (
-    <div className="min-h-screen bg-soft-gray-blue font-sans selection:bg-tangerine-accent selection:text-navy-base">
+    <div className="min-h-screen bg-soft-gray-blue font-sans selection:bg-tangerine-accent selection:text-navy-base pb-20">
       
-      {/* 1. HERO SECTION */}
       <section className="py-12 lg:py-16 border-b-2 border-navy-base relative overflow-hidden bg-white/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -294,7 +321,7 @@ export const EventsPage = () => {
               <h1 className="text-3xl lg:text-4xl font-black text-navy-base uppercase tracking-tighter leading-[1.0] mb-6">
                 Gaming <span className="text-tangerine-accent italic">Schedule</span>
               </h1>
-              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-xl">
+              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-7xll">
                 Find your tribe and roll some dice at The Hobby Corner. Our tables are open every single day for casual play and organized leagues.
               </p>
             </div>
@@ -310,59 +337,64 @@ export const EventsPage = () => {
         </div>
       </section>
 
-      {/* 2. HORIZONTAL SCROLLING CARDS */}
-      <section className="py-16 bg-soft-gray-blue border-b-2 border-navy-base/10">
+      <section className="py-16 bg-soft-gray-blue border-b-2 border-navy-base/10 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-           <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-navy-base/40">Upcoming Events</h2>
+          <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-navy-base/40">
+            Upcoming Events
+          </h2>
         </div>
 
-        <div className="flex gap-8 overflow-x-auto px-4 lg:px-20 pb-12 no-scrollbar cursor-grab active:cursor-grabbing">
-          {gamingEvents.map((event, idx) => (
-            <div 
-              key={idx} 
-              className="group bg-white border-2 border-navy-base shadow-[8px_8px_0px_0px_#0a2342] hover:shadow-[10px_10px_0px_0px_#ff6a00] transition-all min-w-[350px] max-w-[350px] flex-shrink-0 flex flex-col"
-            >
-              <div className="relative h-48 overflow-hidden border-b-2 border-navy-base">
-                <img 
-                  src={event.image} 
-                  alt={event.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-4 left-4 bg-white border-2 border-navy-base px-3 py-1 text-navy-base text-[10px] font-black uppercase tracking-widest shadow-[3px_3px_0px_0px_#0a2342]">
-                  {event.dayBadge}
-                </div>
-              </div>
+        <div className="w-full overflow-x-auto pb-12 no-scrollbar cursor-grab active:cursor-grabbing">
+          <div className="flex w-max">
+            <div className="w-4 sm:w-6 lg:w-8 xl:w-[calc((100vw-1300px)/2+2rem)] shrink-0" />
 
-              <div className="p-8 flex-1 flex flex-col bg-[#fdfcf5]">
-                <div className="mb-6 border-b-2 border-dashed border-navy-base/20 pb-4">
-                  <h3 className="text-2xl font-black text-navy-base uppercase tracking-tighter mb-2 group-hover:text-tangerine-accent transition-colors">
-                    {event.title}
-                  </h3>
-                  <div className="flex items-center gap-2 text-[10px] font-black text-tangerine-accent uppercase tracking-widest">
-                    <Clock size={12} strokeWidth={3} /> {event.schedule}
+            {gamingEvents.map((event, idx) => (
+              <div 
+                key={idx} 
+                className="mr-8 group bg-white border-2 border-navy-base shadow-[8px_8px_0px_0px_#0a2342] hover:shadow-[10px_10px_0px_0px_#ff6a00] transition-all min-w-[350px] max-w-[350px] flex-shrink-0 flex flex-col"
+              >
+                <div className="relative h-48 overflow-hidden border-b-2 border-navy-base">
+                  <img 
+                    src={event.image} 
+                    alt={event.title} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 left-4 bg-white border-2 border-navy-base px-3 py-1 text-navy-base text-[10px] font-black uppercase tracking-widest shadow-[3px_3px_0px_0px_#0a2342]">
+                    {event.dayBadge}
                   </div>
                 </div>
 
-                <p className="font-serif text-muted-cerulean text-sm leading-relaxed mb-8 italic">
-                  "{event.description}"
-                </p>
+                <div className="p-8 flex-1 flex flex-col bg-[#fdfcf5]">
+                  <div className="mb-6 border-b-2 border-dashed border-navy-base/20 pb-4">
+                    <h3 className="text-2xl font-black text-navy-base uppercase tracking-tighter mb-2 group-hover:text-tangerine-accent transition-colors">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-[10px] font-black text-tangerine-accent uppercase tracking-widest">
+                      <Clock size={12} strokeWidth={3} /> {event.schedule}
+                    </div>
+                  </div>
 
-                <div className="mt-auto pt-6 border-t-2 border-navy-base flex items-center justify-between">
-                   <div className="flex items-center gap-2 text-navy-base">
-                      <Info size={14} strokeWidth={3} />
-                      <span className="text-[10px] font-black uppercase tracking-widest">Details</span>
-                   </div>
-                   <p className="text-[10px] font-black uppercase text-navy-base/40">
-                     {event.price}
-                   </p>
+                  <p className="font-serif text-muted-cerulean text-sm leading-relaxed mb-8 italic">
+                    "{event.description}"
+                  </p>
+
+                  <div className="mt-auto pt-6 border-t-2 border-navy-base flex items-center justify-between">
+                     <div className="flex items-center gap-2 text-navy-base">
+                        <Info size={14} strokeWidth={3} />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Details</span>
+                     </div>
+                     <p className="text-[10px] font-black uppercase text-navy-base/40">
+                       {event.price}
+                     </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+            <div className="w-4 sm:w-6 lg:w-8 xl:w-[calc((100vw-1300px)/2+2rem)] shrink-0" />
+          </div>
         </div>
       </section>
 
-      {/* 3. RULES & SIDEBAR */}
       <section className="py-16 bg-white border-b-2 border-navy-base">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
@@ -393,7 +425,7 @@ export const EventsPage = () => {
                   href="https://calendar.google.com/calendar?cid=aG9iYnljb3JuZXIuaWNAZ21haWwuY29t"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-block text-center bg-navy-base text-white px-6 py-4 font-black uppercase text-[10px] tracking-widest hover:bg-white hover:text-navy-base transition-all"
+                  className="w-full inline-block text-center bg-navy-base text-white px-6 py-4 font-black uppercase text-[10px] tracking-widest hover:bg-white hover:text-navy-base transition-all border-2 border-transparent hover:border-navy-base"
                 >
                   Sync To My Calendar
                 </a>
@@ -404,7 +436,6 @@ export const EventsPage = () => {
         </div>
       </section>
 
-      {/* 4. INTERACTIVE CALENDAR SECTION */}
       <section className="bg-soft-gray-blue border-t-2 border-navy-base/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           

@@ -64,7 +64,7 @@ export const SpecialOrders = () => {
                 <span className="text-tangerine-accent italic">we'll get it.</span>
               </h1>
               
-              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-xl">
+              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-7xll">
                 One of our best-kept secrets: If it’s not on the shelf, it doesn’t mean it’s out of reach. From specific <span className="text-navy-base font-bold">RC parts</span> to <span className="text-navy-base font-bold">Board Game expansions</span> or even <span className="text-navy-base font-bold">Melissa & Doug toys</span>—we can order it for you at no extra cost.
               </p>
             </div>

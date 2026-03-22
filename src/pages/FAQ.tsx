@@ -150,7 +150,7 @@ export const FAQPage = () => {
                 <span className="text-tangerine-accent italic">Questions.</span>
               </h1>
               
-              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-xl">
+              <p className="font-serif text-muted-cerulean text-lg leading-relaxed max-w-7xll">
                 Everything you need to know about our return policies, RC repair bench, and open gaming rules at the Iowa City Marketplace.
               </p>
             </div>
