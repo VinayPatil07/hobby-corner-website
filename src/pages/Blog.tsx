@@ -14,21 +14,20 @@ export const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
-  // DEBOUNCE EFFECT
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // DYNAMIC FETCH
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       let query = supabase
         .from('blog_posts')
-        .select('*')
+        .select('id, title, content, created_at, image_url, tags')        
         .eq('is_published', true)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(12);
 
       if (activeTags.length > 0) {
         query = query.overlaps('tags', activeTags);
