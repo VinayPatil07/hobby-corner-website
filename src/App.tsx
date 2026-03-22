@@ -15,6 +15,7 @@ import { FAQPage } from './pages/FAQ';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import ScrollToTop from './components/ScrollToTop'; 
+import { NotFound } from './components/NotFound';
 
 const HomePage = () => (
   <>
@@ -43,6 +44,7 @@ function App() {
             <Route path="/admin/terminal" element={<AdminTerminal />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
