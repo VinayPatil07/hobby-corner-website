@@ -3,31 +3,53 @@ import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
 import { 
   CalendarDays, ArrowRight, Tag, 
-  Archive, Loader2, X, Search
+  Archive, Loader2, X, Search, ChevronDown
 } from 'lucide-react';
 
 export const Blog = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [activeTags, setActiveTags] = useState<string[]>([]);
   
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
+  // PAGINATION STATE
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const POSTS_PER_PAGE = 10; // How many to load at a time
+
+  // DEBOUNCE EFFECT
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // RESET PAGE WHEN FILTERS CHANGE
+  useEffect(() => {
+    setPage(0);
+    setPosts([]);
+    setHasMore(true);
+  }, [activeTags, debouncedQuery]);
+
+  // DYNAMIC FETCH WITH PAGINATION
   useEffect(() => {
     const fetchPosts = async () => {
-      setLoading(true);
+      if (page === 0) setLoading(true);
+      else setLoadingMore(true);
+
+      // Calculate the Supabase range (e.g., 0-9, 10-19)
+      const from = page * POSTS_PER_PAGE;
+      const to = from + POSTS_PER_PAGE - 1;
+
       let query = supabase
         .from('blog_posts')
-        .select('id, title, content, created_at, image_url, tags')        
+        // We ask for the exact count so we know when to hide the "Load More" button
+        .select('id, title, content, created_at, image_url, tags', { count: 'exact' }) 
         .eq('is_published', true)
         .order('created_at', { ascending: false })
-        .limit(12);
+        .range(from, to);
 
       if (activeTags.length > 0) {
         query = query.overlaps('tags', activeTags);
@@ -37,13 +59,28 @@ export const Blog = () => {
         query = query.or(`title.ilike.%${debouncedQuery}%,content.ilike.%${debouncedQuery}%`);
       }
 
-      const { data } = await query;
-      if (data) setPosts(data);
+      const { data, count } = await query;
+      
+      if (data) {
+        if (page === 0) {
+          setPosts(data);
+        } else {
+          // Append new posts to the existing list
+          setPosts(prev => [...prev, ...data]);
+        }
+        
+        // Determine if there are more posts waiting in the database
+        if (count !== null) {
+          setHasMore(from + data.length < count);
+        }
+      }
+
       setLoading(false);
+      setLoadingMore(false);
     };
 
     fetchPosts();
-  }, [activeTags, debouncedQuery]);
+  }, [page, activeTags, debouncedQuery]);
 
   const toggleTag = (tag: string) => {
     setActiveTags(prev => 
@@ -114,7 +151,6 @@ export const Blog = () => {
       </section>
 
       {/* 2. MAIN FEED */}
-   {/* 2. MAIN FEED */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           
@@ -160,7 +196,7 @@ export const Blog = () => {
             {/* ARTICLES FEED & SEARCH (Right Side) */}
             <div className="lg:col-span-8 order-1 lg:order-2">
               
-              {/* SEARCH BAR - Now neatly contained above the articles */}
+              {/* SEARCH BAR */}
               <div className="mb-12 bg-white border-2 border-navy-base p-1 flex items-center shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] focus-within:shadow-[6px_6px_0px_0px_#ff6a00] focus-within:-translate-y-1 transition-all group">
                 <div className="pl-5 pr-3">
                   <Search className="text-navy-base/40 group-focus-within:text-tangerine-accent transition-colors" size={24} />
@@ -184,43 +220,56 @@ export const Blog = () => {
               </div>
 
               <div className="space-y-16">
-                {loading && posts.length > 0 && (
-                  <div className="flex justify-center mb-8">
-                    <Loader2 className="animate-spin text-tangerine-accent" size={32} />
-                  </div>
-                )}
                 
                 {posts.length > 0 ? (
-                  posts.map((post) => (
-                    <article key={post.id} className="group bg-white border-2 border-navy-base shadow-[8px_8px_0px_0px_rgba(10,35,66,1)] hover:shadow-[12px_12px_0px_0px_#ff6a00] hover:-translate-y-1 transition-all overflow-hidden">
-                      {post.image_url && (
-                        <div className="relative h-56 lg:h-72 border-b-2 border-navy-base overflow-hidden">
-                          <img src={post.image_url} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="" />
-                          <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                            {post.tags?.slice(0, 3).map((t: string) => (
-                              <span key={t} className="bg-white border-2 border-navy-base px-3 py-1 text-navy-base text-[9px] font-black uppercase shadow-[3px_3px_0px_0px_#0a2342]">{t}</span>
-                            ))}
+                  <>
+                    {posts.map((post) => (
+                      <article key={post.id} className="group bg-white border-2 border-navy-base shadow-[8px_8px_0px_0px_rgba(10,35,66,1)] hover:shadow-[12px_12px_0px_0px_#ff6a00] hover:-translate-y-1 transition-all overflow-hidden">
+                        {post.image_url && (
+                          <div className="relative h-56 lg:h-72 border-b-2 border-navy-base overflow-hidden">
+                            <img src={post.image_url} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="" loading="lazy" />
+                            <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                              {post.tags?.slice(0, 3).map((t: string) => (
+                                <span key={t} className="bg-white border-2 border-navy-base px-3 py-1 text-navy-base text-[9px] font-black uppercase shadow-[3px_3px_0px_0px_#0a2342]">{t}</span>
+                              ))}
+                            </div>
                           </div>
+                        )}
+                        
+                        <div className="p-8 lg:p-10 bg-[#fdfcf5]">
+                          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-cerulean mb-5 italic border-b-2 border-navy-base/5 pb-3">
+                            <CalendarDays size={14} className="text-tangerine-accent" /> 
+                            {new Date(post.created_at).toLocaleDateString()}
+                          </div>
+                          <h2 className="text-2xl lg:text-3xl font-black text-navy-base uppercase tracking-tighter mb-6 leading-tight group-hover:text-tangerine-accent transition-colors">{post.title}</h2>
+                          <div 
+                            className="prose prose-slate font-serif text-muted-cerulean text-base lg:text-lg leading-relaxed mb-8 italic line-clamp-3 prose-p:mb-0" 
+                            dangerouslySetInnerHTML={{ __html: post.content }} 
+                          />
+                          <Link to={`/blog/${post.id}`} className="inline-flex items-center gap-3 text-navy-base font-black uppercase tracking-widest text-[11px] group/link border-b-4 border-double border-tangerine-accent pb-1">
+                            Full Dispatch <ArrowRight size={16} strokeWidth={3} className="group-hover/link:translate-x-2 transition-transform" />
+                          </Link>
                         </div>
-                      )}
-                      
-                      {/* Reduced padding to p-8 lg:p-10 to make cards tighter */}
-                      <div className="p-8 lg:p-10 bg-[#fdfcf5]">
-                        <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-cerulean mb-5 italic border-b-2 border-navy-base/5 pb-3">
-                          <CalendarDays size={14} className="text-tangerine-accent" /> 
-                          {new Date(post.created_at).toLocaleDateString()}
-                        </div>
-                        <h2 className="text-2xl lg:text-3xl font-black text-navy-base uppercase tracking-tighter mb-6 leading-tight group-hover:text-tangerine-accent transition-colors">{post.title}</h2>
-                        <div 
-                          className="prose prose-slate font-serif text-muted-cerulean text-base lg:text-lg leading-relaxed mb-8 italic line-clamp-3 prose-p:mb-0" 
-                          dangerouslySetInnerHTML={{ __html: post.content }} 
-                        />
-                        <Link to={`/blog/${post.id}`} className="inline-flex items-center gap-3 text-navy-base font-black uppercase tracking-widest text-[11px] group/link border-b-4 border-double border-tangerine-accent pb-1">
-                          Full Dispatch <ArrowRight size={16} strokeWidth={3} className="group-hover/link:translate-x-2 transition-transform" />
-                        </Link>
+                      </article>
+                    ))}
+
+                    {/* LOAD MORE BUTTON */}
+                    {hasMore && (
+                      <div className="pt-8 flex justify-center border-t-4 border-double border-navy-base/10">
+                        <button 
+                          onClick={() => setPage(prev => prev + 1)}
+                          disabled={loadingMore}
+                          className="group relative flex items-center justify-center gap-3 bg-white text-navy-base border-2 border-navy-base px-10 py-4 font-black uppercase text-[11px] tracking-[0.2em] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#ff6a00] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                        >
+                          {loadingMore ? (
+                            <><Loader2 size={16} className="animate-spin" /> Digging into archives...</>
+                          ) : (
+                            <><ChevronDown size={16} className="group-hover:translate-y-0.5 transition-transform" /> Load More Dispatches</>
+                          )}
+                        </button>
                       </div>
-                    </article>
-                  ))
+                    )}
+                  </>
                 ) : (
                   <div className="py-20 text-center bg-white border-4 border-dashed border-navy-base/10">
                     <Search className="mx-auto text-navy-base/10 mb-4" size={40} />
