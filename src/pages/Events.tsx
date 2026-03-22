@@ -88,8 +88,8 @@ const InteractiveCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 1));
   const [hoveredEvent, setHoveredEvent] = useState<any>(null);
   
-  // 1. ADDED: A reference to track where "today" is on the screen
   const todayRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const today = new Date(); 
   const year = currentDate.getFullYear();
@@ -200,18 +200,20 @@ const InteractiveCalendar = () => {
       }
   }
 
-  // 3. ADDED: This effect fires when the calendar loads or changes months.
-  // If it finds the "target" (today), it smoothly scrolls it to the center of the mobile screen.
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (todayRef.current) {
-        todayRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',   // Prevents the whole page from jumping down vertically
-          inline: 'center',   // Centers it horizontally on mobile
+      if (todayRef.current && scrollContainerRef.current) {
+        const container = scrollContainerRef.current;
+        const target = todayRef.current;
+        
+        const scrollPosition = target.offsetLeft - (container.clientWidth / 2) + (target.clientWidth / 2);
+        
+        container.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth'
         });
       }
-    }, 150); // Small delay to ensure the mobile layout has finished rendering before scrolling
+    }, 150); 
     return () => clearTimeout(timer);
   }, [currentDate]);
 
