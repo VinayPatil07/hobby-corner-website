@@ -57,7 +57,7 @@ const eventDetails = {
   boardGames: {
     title: "Board Game Night",
     time: "5:00 PM – 11:00 PM",
-    color: "bg-tangerine-accent text-navy-base",
+    color: "bg-tangerine-accent text-white",
     description: "The best time to try out a new game or play a favorite. Our community is friendly and inviting to everyone.",
     price: "$5.00 Store Credit Entry"
   },
