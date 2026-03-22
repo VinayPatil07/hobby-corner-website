@@ -24,7 +24,7 @@ export const NotFound = () => {
             We checked the back room, looked under the register, and dug through the spare parts bin. Whatever page you're looking for just isn't here.
           </p>
           <p className="text-sm italic opacity-80 border-t-2 border-dashed border-navy-base/20 pt-4 mt-4">
-            (If you typed the link manually, double-check your spelling. Otherwise, the carpet monster probably ate it along with that one specific screw you dropped last night.)
+            (If you typed the link manually, double-check your spelling. Otherwise, the carpet monster probably ate it along with that one screw you dropped last night.)
           </p>
         </div>
 
