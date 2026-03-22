@@ -36,7 +36,7 @@ export default function AdminLogin() {
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-[#0a2342]/60 flex items-center gap-2">
-              <Mail size={12}/> Username
+              <Mail size={12}/> Email
             </label>
             <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} 
               className="w-full border-2 border-[#0a2342] p-4 font-bold outline-none focus:ring-4 focus:ring-[#ff6a00]/20" />
