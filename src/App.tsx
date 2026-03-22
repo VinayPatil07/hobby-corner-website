@@ -15,7 +15,7 @@ import { FAQPage } from './pages/FAQ';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import ScrollToTop from './components/ScrollToTop'; 
-import { NotFound } from './components/NotFound';
+import { NotFound } from './pages/NotFound';
 
 const HomePage = () => (
   <>
