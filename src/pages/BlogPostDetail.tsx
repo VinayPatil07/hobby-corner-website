@@ -128,7 +128,7 @@ export default function BlogPostDetail() {
           <div className="bg-navy-base text-white p-8 shadow-[6px_6px_0px_0px_#ff6a00] -rotate-1">
             <Quote className="text-tangerine-accent mb-4" size={24} />
             <p className="font-serif text-sm italic leading-relaxed">
-              Serving the Iowa City hobby community since 2016. Visit the shop at Sycamore Mall for the full experience.
+              Serving the Iowa City hobby community since 1976. Visit the shop at Sycamore Mall for the full experience.
             </p>
           </div>
         </aside>
