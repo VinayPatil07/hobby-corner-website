@@ -33,7 +33,7 @@ export default function FAQModule({ onSelect, selectedId }: FAQModuleProps) {
           FAQ <span className="text-[#ff6a00]">Moderation.</span>
         </h2>
         <div className="flex bg-white border-2 border-[#0a2342] p-1 shadow-[4px_4px_0px_0px_#0a2342]">
-          {['pending', 'answered', 'denied'].map((s) => (
+          {['pending', 'answered'].map((s) => (
             <button 
               key={s} 
               onClick={() => setStatusFilter(s)}

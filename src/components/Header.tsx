@@ -31,7 +31,6 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', controlHeader);
   }, [lastScrollY]);
 
-  // UPDATED: Now perfectly matches the Footer's navigation list
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'Events', href: '/events' },

@@ -211,7 +211,7 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
   };
 
   return (
-    <aside className="w-[700px] bg-[#fdfcf5] border-l-4 border-[#0a2342] p-12 flex flex-col shadow-2xl relative animate-in slide-in-from-right duration-300 overflow-y-auto h-screen sticky top-0">
+    <aside className="w-[700px] bg-[#fdfcf5] border-l-4 border-[#0a2342] p-12 flex flex-col shadow-2xl relative animate-in slide-in-from-right duration-300 overflow-y-auto h-screen top-0">
       <button 
         onClick={onClose} 
         className="absolute top-8 right-8 border-2 border-[#0a2342] p-2 hover:bg-[#ff6a00] transition-colors shadow-[2px_2px_0px_0px_#0a2342] active:shadow-none bg-white z-50"
