@@ -3,7 +3,7 @@ import { MapPin, Clock, Phone, Mail, ExternalLink } from 'lucide-react';
 export const StoreInfo = () => {
   const hours = [
     { days: 'Mon - Fri', time: '10:00 AM - 8:00 PM' },
-    { days: 'Saturday', time: '10:00 AM - 6:00 PM' },
+    { days: 'Saturday', time: '10:00 AM - 5:30 PM' },
     { days: 'Sunday', time: '12:00 PM - 5:00 PM' },
   ];
 
