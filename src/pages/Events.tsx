@@ -421,7 +421,7 @@ export const EventsPage = () => {
               <div className="bg-tangerine-accent border-2 border-navy-base p-10 shadow-[6px_6px_0px_0px_#0a2342] rotate-1">
                 <h3 className="text-xl font-black text-navy-base uppercase tracking-tighter mb-4">Need a Calendar?</h3>
                 <p className="font-black text-white text-[11px] uppercase tracking-widest leading-relaxed mb-8">
-                  Sync our Google Calendar to never miss a tournament or league night at the Marketplace.
+                  Sync our Google Calendar to never miss a game night at the Marketplace.
                 </p>
                 <a 
                   href="https://calendar.google.com/calendar?cid=aG9iYnljb3JuZXIuaWNAZ21haWwuY29t"
