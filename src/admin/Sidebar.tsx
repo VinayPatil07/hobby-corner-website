@@ -12,7 +12,6 @@ export default function Sidebar({ activeModule, setActiveModule, onLogout }: Sid
   const [unread, setUnread] = useState({ faqs: 0, orders: 0 });
 
   const fetchUnread = async () => {
-    // UPDATED: We now filter by 'is_read' AND 'status' so the badge matches the module's default view
     const { count: faqCount } = await supabase
       .from('faqs')
       .select('*', { count: 'exact', head: true })
@@ -31,7 +30,6 @@ export default function Sidebar({ activeModule, setActiveModule, onLogout }: Sid
   useEffect(() => {
     fetchUnread();
 
-    // REAL-TIME: Listen for any database changes to update badges automatically
     const channel = supabase.channel('terminal-notifications')
       .on('postgres_changes', { event: '*', schema: 'public' }, () => fetchUnread())
       .subscribe();
@@ -67,7 +65,6 @@ export default function Sidebar({ activeModule, setActiveModule, onLogout }: Sid
               {item.icon} {item.label}
             </div>
 
-            {/* Notification Badge */}
             {item.count > 0 && (
               <span className="bg-white text-[#0a2342] px-2 py-1 text-[10px] border-2 border-[#0a2342] shadow-[2px_2px_0px_0px_#0a2342] group-hover:bg-[#ff6a00] transition-colors">
                 {item.count}

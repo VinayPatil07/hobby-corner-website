@@ -26,16 +26,12 @@ export const FeaturesAndCommunity = () => {
 
   return (
     <div className="bg-soft-gray-blue">
-      {/* SECTION 1: SHOP EXPERIENCE */}
       <section className="py-16 border-b-2 border-navy-base">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
-            
-            {/* LEFT SIDE: IN-STORE SLIDESHOW & TEXT */}
-            {/* FIX: Added order-2 lg:order-1 to push it down on mobile, but keep it left on desktop */}
+        
             <div className="order-2 lg:order-1 flex flex-col border-2 border-navy-base bg-white shadow-[4px_4px_0px_0px_rgba(10,35,66,1)] overflow-hidden">
-              {/* Slideshow Area */}
               <div className="h-56 lg:h-60 relative bg-navy-base border-b-2 border-navy-base">
                 {storeImages.map((img, index) => (
                   <img 
@@ -46,14 +42,12 @@ export const FeaturesAndCommunity = () => {
                   />
                 ))}
                 
-                {/* Indicators */}
                 <div className="absolute bottom-4 left-6 flex gap-1.5 z-20">
                   {storeImages.map((_, i) => (
                     <div key={i} className={`h-1.5 w-5 lg:w-6 border border-navy-base/20 transition-all ${i === currentImage ? 'bg-tangerine-accent' : 'bg-white/40'}`} />
                   ))}
                 </div>
 
-                {/* Nav Arrows */}
                 <div className="absolute inset-0 flex items-center justify-between px-3 opacity-0 hover:opacity-100 transition-opacity z-10">
                   <button onClick={prevImage} className="bg-white border-2 border-navy-base p-1 hover:bg-tangerine-accent transition-colors">
                     <ChevronLeft size={20} className="text-navy-base" />
@@ -64,7 +58,6 @@ export const FeaturesAndCommunity = () => {
                 </div>
               </div>
 
-              {/* In-Store Text Area */}
               <div className="p-6 lg:p-7 flex flex-col flex-grow">
                 <div className="flex items-center gap-2 mb-2 text-tangerine-accent">
                   <MapPin size={14} strokeWidth={3} />
@@ -78,7 +71,6 @@ export const FeaturesAndCommunity = () => {
                   We've got everything you need for your next project, build, or game night. Stop by the shop to say hi or browse our inventory online.
                 </p>
 
-                {/* VIRTUAL TOUR BUTTON */}
                 <a 
                   href="https://www.google.com/local/place/fid/0x87e46a70197a6217:0x51fb6854769d020b/photosphere?iu=https://lh3.googleusercontent.com/gps-cs-s/AHVAweoNg7E2CvweQOilENDwNes7SrJycpPiGw-4rhOzsosDni1HA0lC1S1QE2Mn9GleO_TcymFgte7RC2d3B7O6P-px_cOk6dYBQusXCEwwVZ70YIP07iI2eq8xEzDDb10kdU0s5N89%3Dw160-h106-k-no-pi-10-ya233.44-ro0-fo100&ik=CAoSFkNJSE0wb2dLRUlDQWdJQ3MtSlc5U2c%3D" 
                   target="_blank"
@@ -89,17 +81,13 @@ export const FeaturesAndCommunity = () => {
                   Take a Virtual Tour
                 </a>
 
-                {/* Dashed Border */}
                 <div className="mt-auto pt-4 border-t-2 border-dashed border-navy-base/20 flex items-center justify-between">
                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-navy-base">1660 Sycamore St</span>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT SIDE: HEADER & ONLINE STORE BOX */}
-            {/* FIX: Added order-1 lg:order-2 to make this show up FIRST on mobile screens */}
             <div className="order-1 lg:order-2 flex flex-col justify-between h-full">
-              {/* Top Text Block */}
               <div className="mb-6 lg:mb-0">
                 
                 <div className="inline-block self-start px-3 py-1 bg-white border-2 border-navy-base text-navy-base text-[9px] font-black uppercase tracking-[0.2em] mb-6 shadow-[2px_2px_0px_0px_rgba(10,35,66,1)]">
@@ -123,7 +111,6 @@ export const FeaturesAndCommunity = () => {
                 </p>
               </div>
 
-              {/* Online Store Card */}
               <div className="bg-white border-2 border-navy-base p-6 lg:p-7 shadow-[4px_4px_0px_0px_rgba(255,155,84,1)] mt-auto">
                 <div className="flex items-center justify-between mb-6">
                   <img src={hobbyRisingLogo} alt="Hobby Rising" className="h-12 lg:h-14 w-auto object-contain" />
@@ -133,7 +120,6 @@ export const FeaturesAndCommunity = () => {
                   </div>
                 </div>
 
-                {/* ONLINE STORE BUTTON */}
                 <a 
                   href="https://hobbyrising.com" 
                   target="_blank"

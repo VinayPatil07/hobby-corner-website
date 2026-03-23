@@ -17,7 +17,7 @@ export default function AdminLogin() {
     if (error) {
       alert(error.message);
     } else {
-      navigate('/admin/terminal'); // <-- Add this redirect!
+      navigate('/admin/terminal'); 
     }
     setLoading(false);
   };
@@ -50,7 +50,7 @@ export default function AdminLogin() {
           </div>
           <button type="submit" disabled={loading}
             className="w-full bg-[#0a2342] text-white font-black uppercase py-5 border-2 border-[#0a2342] shadow-[6px_6px_0px_0px_#ff6a00] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
-            {loading ? 'Authenticating...' : 'Enter Terminal'}
+            {loading ? 'Authenticating...' : 'Login'}
           </button>
         </form>
       </div>

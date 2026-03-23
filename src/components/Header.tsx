@@ -105,7 +105,6 @@ export const Header = () => {
           </div>
         </div>
 
-        {/* --- FIX: MOBILE MENU DRAWER --- */}
         <div className={`
           absolute top-full left-0 w-full h-screen z-40 bg-navy-base/95 backdrop-blur-md transition-all duration-300 xl:hidden
           ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}

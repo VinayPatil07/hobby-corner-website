@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { ChevronRight } from 'lucide-react';
 
-// This fixes the "Cannot find name FAQModuleProps" error
 interface FAQModuleProps {
   onSelect: (item: any) => void;
   selectedId?: string;
@@ -50,7 +49,7 @@ export default function FAQModule({ onSelect, selectedId }: FAQModuleProps) {
         {loading ? (
           <div className="font-black uppercase opacity-10 text-4xl italic">Scanning Database...</div>
         ) : (
-          faqs.map((faq: any) => ( // Added :any to fix Parameter 'faq' error
+          faqs.map((faq: any) => ( 
             <div 
               key={faq.id} 
               onClick={() => onSelect(faq)}

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { ChevronRight } from 'lucide-react';
 
-// This fixes the "Cannot find name OrderModuleProps" error
 interface OrderModuleProps {
   onSelect: (item: any) => void;
   selectedId?: string;
@@ -44,7 +43,7 @@ export default function OrderModule({ onSelect, selectedId }: OrderModuleProps) 
       </header>
 
       <div className="space-y-4">
-        {orders.map((order: any) => ( // Added :any to fix Parameter 'order' error
+        {orders.map((order: any) => ( 
           <div 
             key={order.id} 
             onClick={() => onSelect(order)}

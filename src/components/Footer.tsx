@@ -16,7 +16,6 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
           
-          {/* COLUMN 1: BRANDING & SOCIALS */}
           <div className="lg:col-span-4 space-y-8">
             <div className="flex items-center gap-4">
               <img src={logo} alt="Hobby Corner" className="h-12 w-auto object-contain" />
@@ -45,7 +44,6 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* COLUMN 2: QUICK LINKS */}
           <div className="lg:col-span-2">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white mb-6 border-b border-muted-cerulean/30 pb-2">
               Navigation
@@ -64,7 +62,6 @@ export const Footer = () => {
             </nav>
           </div>
 
-          {/* COLUMN 3: STORE INFO */}
           <div className="lg:col-span-3">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white mb-6 border-b border-muted-cerulean/30 pb-2">
               Visit The Shop
@@ -86,7 +83,6 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* COLUMN 4: HOURS */}
           <div className="lg:col-span-3">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white mb-6 border-b border-muted-cerulean/30 pb-2">
               Store Hours
@@ -108,7 +104,6 @@ export const Footer = () => {
           </div>
         </div>
         
-        {/* BOTTOM BAR */}
         <div className="pt-8 border-t border-muted-cerulean/20 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] uppercase tracking-[0.3em] font-black text-soft-gray-blue/60">
           <p>© 2026 The Hobby Corner. Established 1976.</p>
           <div className="flex space-x-8">

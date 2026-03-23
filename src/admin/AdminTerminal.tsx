@@ -21,7 +21,6 @@ export default function AdminTerminal() {
   }, []);
 
   const refreshData = () => {
-    // This triggers a re-render in children by changing the selectedItem to null
     setSelectedItem(null);
   };
 

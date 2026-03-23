@@ -5,7 +5,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send();
 
-  // 1. EXTRACT 'reason' FROM THE INCOMING REQUEST
   const { email, customer_name, item_name, status, reason } = req.body;
 
   let subject = "";
@@ -23,7 +22,6 @@ export default async function handler(req, res) {
     case 'unavailable':
       subject = `Update regarding your order: ${item_name}`;
       
-      // 2. FORMAT THE CUSTOM REASON (If the employee wrote one)
       const reasonHtml = reason 
         ? `<div style="background-color: #f0f2f5; border-left: 4px solid #ff6a00; padding: 12px; margin: 16px 0;">
              <strong style="text-transform: uppercase; font-size: 12px; letter-spacing: 0.1em; color: #0a2342;">Notes from the team:</strong><br/>
@@ -41,7 +39,7 @@ export default async function handler(req, res) {
 
   try {
     await resend.emails.send({
-      from: 'Hobby Corner <onboarding@resend.dev>', // Update this when you have a domain!
+      from: 'Hobby Corner <onboarding@resend.dev>', 
       to: email,
       subject: subject,
       html: `

@@ -1,7 +1,6 @@
 import { ArrowRight, CalendarDays, Users, Swords, Gamepad2, Bookmark } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Asset Imports
 import BGN from '../assets/BGN.png';
 import BT from '../assets/BT.png';
 import OG from '../assets/OG.png';
@@ -19,7 +18,6 @@ export const Community = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
-          {/* LEFT COLUMN: PRIMARY CONTENT & BLOG SIDEBAR */}
           <div className="lg:col-span-5 flex flex-col items-start">
             
             <div className="inline-block px-3 py-1 bg-white border-2 border-navy-base text-navy-base text-[9px] font-black uppercase tracking-[0.2em] mb-6 shadow-[3px_3px_0px_0px_rgba(10,35,66,1)]">
@@ -37,7 +35,6 @@ export const Community = () => {
               Our dedicated game room hosts a weekly schedule of tabletop campaigns, board game nights, and collaborative building sessions. Whether you're a veteran or just starting out, there's a seat at the table for you.
             </p>
 
-            {/* PRIMARY CTA: EVENTS BUTTON */}
             <Link 
               to="/events" 
               className="group relative inline-flex items-center justify-center gap-2 bg-tangerine-accent text-navy-base border-2 border-navy-base px-5 py-3 font-black uppercase tracking-[0.12em] text-[11px] transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(10,35,66,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none w-full sm:w-auto mb-12"
@@ -47,14 +44,11 @@ export const Community = () => {
               <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            {/* NEWSPAPER BLOG CLIPPING (Reverted Tape) */}
             <div className="relative w-full max-w-sm group">
-              {/* Reverted Clean Tape Sticker */}
               <div className="absolute -top-3 left-12 w-16 h-7 bg-white/60 border border-navy-base/10 shadow-sm rotate-[-3deg] z-20"></div>
               
               <div className="bg-[#fdfcf5] border-2 border-navy-base p-6 shadow-[4px_4px_0px_0px_rgba(10,35,66,1)] rotate-[-1deg] group-hover:rotate-0 transition-all duration-300">
                 
-                {/* Sidebar Header */}
                 <div className="relative inline-block mb-6">
                   <div className="absolute inset-x-0 bottom-0 h-3 bg-tangerine-accent/20 -rotate-1"></div>
                   <div className="relative flex items-center gap-2 px-1">
@@ -83,7 +77,6 @@ export const Community = () => {
                   ))}
                 </div>
 
-                {/* Newspaper Footer Detail */}
                 <div className="mt-8 flex justify-between items-center opacity-30 border-t border-navy-base/10 pt-2">
                    <span className="text-[7px] font-black uppercase tracking-widest italic leading-none">The Morning Dispatch</span>
                    <span className="text-[7px] font-black uppercase tracking-widest leading-none">Page 04</span>
@@ -92,11 +85,9 @@ export const Community = () => {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: THE BULLETIN BOARD */}
           <div className="lg:col-span-7 pt-10 lg:pt-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-10 relative items-start">
               
-              {/* CARD 1: BOARD GAME NIGHT */}
               <div className="group relative bg-white border-2 border-navy-base shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] flex flex-col rotate-[-2deg] hover:rotate-0 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_rgba(10,35,66,1)] transition-all duration-300 z-10 origin-bottom-left cursor-pointer">
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-tangerine-accent border-2 border-navy-base shadow-[2px_2px_0px_0px_rgba(10,35,66,1)] z-30 flex items-center justify-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-white/60 blur-[0.5px] -mt-1 -ml-1"></div>
@@ -114,7 +105,6 @@ export const Community = () => {
                 </div>
               </div>
 
-              {/* CARD 2: BATTLETECH */}
               <div className="group relative bg-white border-2 border-navy-base shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] flex flex-col rotate-[2deg] sm:mt-12 hover:rotate-0 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_rgba(10,35,66,1)] transition-all duration-300 z-10 origin-bottom-right cursor-pointer">
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-muted-cerulean border-2 border-navy-base shadow-[2px_2px_0px_0px_rgba(10,35,66,1)] z-30 flex items-center justify-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-white/60 blur-[0.5px] -mt-1 -ml-1"></div>
@@ -132,7 +122,6 @@ export const Community = () => {
                 </div>
               </div>
 
-              {/* CARD 3: OPEN GAMING */}
               <div className="group relative bg-white border-2 border-navy-base shadow-[6px_6px_0px_0px_rgba(10,35,66,1)] flex flex-col rotate-[-1deg] sm:col-span-2 sm:w-[65%] sm:mx-auto sm:-mt-6 hover:rotate-0 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_rgba(10,35,66,1)] transition-all duration-300 z-20 origin-center cursor-pointer">
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-tangerine-accent border-2 border-navy-base shadow-[2px_2px_0px_0px_rgba(10,35,66,1)] z-30 flex items-center justify-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-white/60 blur-[0.5px] -mt-1 -ml-1"></div>

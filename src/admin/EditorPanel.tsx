@@ -22,7 +22,6 @@ interface EditorPanelProps {
   onRefresh: () => void;
 }
 
-// --- FULL RICH TEXT TOOLBAR ---
 const MenuBar = ({ editor }: { editor: any }) => {
   if (!editor) return null;
 
@@ -60,7 +59,6 @@ const MenuBar = ({ editor }: { editor: any }) => {
 };
 
 export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPanelProps) {
-  // --- STATES ---
   const [title, setTitle] = useState(item.title || "");
   const [tagsInput, setTagsInput] = useState(item.tags?.join(', ') || "");
   const [previewUrl, setPreviewUrl] = useState(item.image_url || null);
@@ -87,7 +85,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
     },
   });
 
-  // --- STABLE LOAD & READ LOGIC ---
   useEffect(() => {
     if (editor && item) {
       editor.commands.setContent(item.content || item.answer || "");
@@ -98,7 +95,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
       setCategory(item.category || "");
       setUnavailableReason(""); 
 
-      // Silent background read update (No onRefresh here to prevent panel closing)
       const markAsRead = async () => {
         if (item.is_read === false) {
           const table = type === 'blog' ? 'blog_posts' : type === 'orders' ? 'special_orders' : 'faqs';
@@ -109,7 +105,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
     }
   }, [item.id, editor]); 
 
-  // --- HANDLERS ---
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setUploading(true);
@@ -164,14 +159,13 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
       .eq('id', item.id);
 
     if (!error) {
-      // TRIGGER FAQ EMAIL
       if (item.email) {
         try {
           await fetch('/api/send-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              to: item.email, // Matches api/send-email.mjs 'to'
+              to: item.email, 
               subject: 'Hobby Corner: Your Question has been Answered!',
               question: item.question,
               answer: editor?.getHTML()
@@ -194,7 +188,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
   const handleOrderStatus = async (status: string) => {
     const { error } = await supabase.from('special_orders').update({ status, is_read: true }).eq('id', item.id);
     if (!error) {
-      // TRIGGER ORDER STATUS EMAIL
       if (item.email) {
         try {
           await fetch('/api/order-status-email', { 
@@ -219,7 +212,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
 
   return (
     <aside className="w-[700px] bg-[#fdfcf5] border-l-4 border-[#0a2342] p-12 flex flex-col shadow-2xl relative animate-in slide-in-from-right duration-300 overflow-y-auto h-screen sticky top-0">
-      {/* Close Button */}
       <button 
         onClick={onClose} 
         className="absolute top-8 right-8 border-2 border-[#0a2342] p-2 hover:bg-[#ff6a00] transition-colors shadow-[2px_2px_0px_0px_#0a2342] active:shadow-none bg-white z-50"
@@ -227,7 +219,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
         <XCircle size={24}/>
       </button>
       
-      {/* --- BLOG COMPOSER --- */}
       {type === 'blog' ? (
         <div className="space-y-10">
           <header>
@@ -271,7 +262,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
           </button>
         </div>
 
-      /* --- FAQ STUDIO --- */
       ) : type === 'faqs' ? (
         <div className="space-y-10">
            <h2 className="text-3xl font-black uppercase italic tracking-tighter text-[#0a2342]">FAQ <span className="text-[#ff6a00]">Studio.</span></h2>
@@ -303,7 +293,6 @@ export default function EditorPanel({ item, type, onClose, onRefresh }: EditorPa
            </div>
         </div>
 
-      /* --- ORDER CONTROL --- */
       ) : (
         <div className="space-y-10">
           <header>
