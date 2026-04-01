@@ -161,7 +161,7 @@ export const HobbyCon = () => {
             </div>
             
             <div className="w-full lg:w-1/3 flex flex-col gap-4 relative z-10">
-              <a href="https://givebutter.com/hobbycon25" target="_blank" rel="noopener noreferrer" className="w-full text-center bg-tangerine-accent text-navy-base border-4 border-navy-base px-8 py-5 font-black uppercase tracking-[0.2em] text-xs shadow-[6px_6px_0px_0px_#0a2342] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#0a2342] transition-all">
+              <a href="https://givebutter.com/hobbycon26" target="_blank" rel="noopener noreferrer" className="w-full text-center bg-tangerine-accent text-navy-base border-4 border-navy-base px-8 py-5 font-black uppercase tracking-[0.2em] text-xs shadow-[6px_6px_0px_0px_#0a2342] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#0a2342] transition-all">
                 Donate Here
               </a>
               <a href="https://builtbycommunity.org/about/" target="_blank" rel="noopener noreferrer" className="w-full text-center bg-[#fdfcf5] border-4 border-navy-base text-navy-base px-8 py-5 font-black uppercase tracking-[0.2em] text-xs shadow-[6px_6px_0px_0px_#0a2342] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#0a2342] transition-all">
