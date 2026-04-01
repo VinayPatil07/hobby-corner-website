@@ -16,6 +16,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import ScrollToTop from './components/ScrollToTop'; 
 import { NotFound } from './pages/NotFound';
+import { HobbyCon } from './pages/HobbyCon';
 
 const HomePage = () => (
   <>
@@ -44,6 +45,7 @@ function App() {
             <Route path="/admin/terminal" element={<AdminTerminal />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/hobby-con" element={<HobbyCon />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

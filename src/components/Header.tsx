@@ -32,7 +32,7 @@ export const Header = () => {
   }, [lastScrollY]);
 
   const navItems = [
-    { name: 'Home', href: '/' },
+    { name: 'Hobby Con', href: '/hobby-con' },
     { name: 'Events', href: '/events' },
     { name: 'Services', href: '/services' },
     { name: 'Special Orders', href: '/special-orders' },

@@ -3,7 +3,7 @@ import logo from '../assets/logo.png';
 
 export const Footer = () => {
   const navItems = [
-    { name: 'Home', href: '/' },
+    { name: 'Hobby Con', href: '/hobby-con' },
     { name: 'Events', href: '/events' },
     { name: 'Services', href: '/services' },
     { name: 'Special Orders', href: '/special-orders' },
@@ -109,7 +109,7 @@ export const Footer = () => {
           <div className="flex space-x-8">
             <a href="/privacy" className="hover:text-tangerine-accent transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-tangerine-accent transition-colors">Terms of Service</a>
-            <span className="text-muted-cerulean/40">Design by Vinay Patil</span>
+            <span className="text-muted-cerulean">Created by Vinay Patil</span>
           </div>
         </div>
       </div>
