@@ -1,0 +1,60 @@
+[33ma026bed[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m FAQ cloudflare update
+[33m4ef9d9f[m FAQ cloudflare update
+[33mb397d06[m Cloudflare changes
+[33m10ce240[m Fixed commUnityCS image problem
+[33m643b418[m Added Hobby Con Page
+[33m9a7af6c[m Fixed Saturday Hours and Est date
+[33mb5567dc[m Fixed Saturday Hours and Est date
+[33me2d1e76[m Removed denied FAQ
+[33mee2302b[m Changed text
+[33m1899949[m Changed wording on header
+[33mbd0f89a[m Changed text
+[33mc0a59e8[m Changed text
+[33md5dbcd8[m Replaced BGN Color from navy to white
+[33mbf2ccd8[m Lazy
+[33mdb74906[m Too lazy to write
+[33m4a67a1b[m Fixed different bot names on discord webhook
+[33mf659028[m Fix: Weird error with App.tsx resolved
+[33macf9ddc[m Blog view more button added
+[33mdbc44d2[m Fixed Blog page slow loading time
+[33mdabef39[m Fixed Spelling on something
+[33mca18dfc[m Added 404 Not Found page
+[33m5d52759[m Added scroll to top fix
+[33md6a9d92[m Updated FAQ Discord link to point to main terminal
+[33m77b0bd4[m Updated FAQ Discord link to point to main terminal
+[33ma28ebbd[m Fixed Special Order Discord webhook ping
+[33maad4a26[m Fix mobile layout stacking order for store info
+[33m2374c6b[m Fix mobile layout stacking order for store info
+[33m174514a[m Fix mobile layout stacking order for store info
+[33mb7f19aa[m Fix mobile navigation menu visibility issue
+[33md2988e4[m Add Privacy Policy, Terms of Service, and update Footer links
+[33m34ec2ac[m Fix: Duplicate FAQ patched
+[33m3820b5b[m Update favicon and SEO meta tags
+[33m32cbedd[m Configure email triggers and Vercel routing
+[33m1bf6137[m Vercel configuration and build fix
+[33mbb987d8[m Fixed unused import errors for Vercel build
+[33md4da71e[m final
+[33m16540e1[m fix: enforce strict database saving checks
+[33mb15b5ce[m fix: enforce strict database saving checks
+[33md85cad6[m fix: final faq form logic and styles
+[33m3bb2920[m fix: added supabase database insertion back into submit-faq API
+[33m594fe53[m fix: added detailed logging for discord api errors
+[33mf3712a2[m refactor: removed discord interactions, switched to magic link method
+[33ma2d8b39[m fix: reverted to nodejs with bulletproof raw stream reader
+[33m81168ff[m feat: upgraded discord interactions to edge runtime
+[33m0f85f4f[m fix: switched to pure nodejs responses to bypass vercel formatting
+[33m365b409[m fix: updated discord response to use native json formatting
+[33m0846c0a[m fix: explicitly formatted discord JSON response headers
+[33m9b884c0[m fix: disabled vercel body parser for discord verification
+[33m6a9a84e[m feat: added discord interactions endpoint for buttons
+[33m5f76104[m feat: upgraded backend to use discord bot with buttons
+[33md914f94[m feat: faq page now fetches live answers from supabase
+[33mc75da39[m fix: rebuilt vercel function as mjs
+[33m0e05585[m fix: rewrote vercel serverless function as standard js
+[33md5230aa[m fixn
+[33me4e5bc6[m fix: saved and exported discord serverless function
+[33m098b554[m fix: removed unused emailjs import
+[33m7f6a168[m feat: added Discord FAQ serverless function
+[33m7784f00[m fix: .env added
+[33m3e26a54[m fix: remove unused imports to pass build
+[33mbcf73c2[m First commit: Hobby Corner frontend finished
