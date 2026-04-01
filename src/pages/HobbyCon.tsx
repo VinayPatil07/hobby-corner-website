@@ -3,11 +3,10 @@ import {
   Gamepad2, FileDown, ExternalLink, Clock, Wrench, Phone, Mail
 } from 'lucide-react';
 
-import commUnityImg from '../assets/commUnityCs.png';
+import commUnityImg from '../assets/commUnityCS.png';
 import gundamImg from '../assets/Gundam.png';
 
 export const HobbyCon = () => {
-  // Hobby Con specific hours
   const hours = [
     { days: 'Friday', time: '4:00 PM – 9:00 PM' },
     { days: 'Saturday', time: '10:00 AM – 6:00 PM' },
@@ -17,8 +16,6 @@ export const HobbyCon = () => {
 
   return (
     <div className="min-h-screen bg-soft-gray-blue font-sans selection:bg-tangerine-accent selection:text-navy-base pb-0 overflow-hidden">
-      
-      {/* 1. HERO SECTION (UNTOUCHED PER REQUEST) */}
       <section className="py-12 lg:py-16 relative bg-white/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
