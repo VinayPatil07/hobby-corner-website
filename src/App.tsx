@@ -18,6 +18,8 @@ import ScrollToTop from './components/ScrollToTop';
 import { NotFound } from './pages/NotFound';
 import { HobbyCon } from './pages/HobbyCon';
 
+import { Analytics } from "@vercel/analytics/next"
+
 const HomePage = () => (
   <>
     <Hero />
