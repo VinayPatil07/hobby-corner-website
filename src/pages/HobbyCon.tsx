@@ -107,17 +107,24 @@ export const HobbyCon = () => {
               </p>
             </div>
 
-            <div className="lg:col-span-5 space-y-6 relative">
+           <div className="lg:col-span-5 space-y-6 relative">
               {/* 3D Physical-Looking Block for Sign Ups */}
               <div className="bg-white border-4 border-navy-base p-6 shadow-[8px_8px_0px_0px_#0a2342] -rotate-1 relative">
                 {/* Physical Pin */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-soft-gray-blue border-2 border-navy-base shadow-[2px_2px_0px_0px_#0a2342]"></div>
                 
-                <button disabled className="w-full bg-gray-200 text-gray-500 border-4 border-gray-400 px-6 py-4 font-black uppercase tracking-[0.2em] text-xs cursor-not-allowed mb-3 shadow-[inset_4px_4px_0px_0px_rgba(0,0,0,0.1)]">
-                  Event Sign Ups
-                </button>
+                {/* Enabled Sign Up Button */}
+                <a 
+                  href="https://www.signupgenius.com/go/10C094CA9A723A4F5C43-63039520-hobby?useFullSite=true#/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block w-full bg-navy-base text-white border-4 border-navy-base px-6 py-4 font-black uppercase tracking-[0.2em] text-xs text-center transition-all hover:bg-tangerine-accent hover:text-navy-base mb-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] active:translate-y-[2px]"
+                >
+                  Event Sign Ups Open
+                </a>
+                
                 <p className="font-serif text-navy-base/70 text-sm text-center italic font-bold">
-                  Sign ups are currently closed. Check back late April/early May.
+                  Click above to reserve your spot on SignUpGenius!
                 </p>
               </div>
 
